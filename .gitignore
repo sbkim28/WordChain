@@ -1,0 +1,4 @@
+.idea/
+out/
+src/META-INF/
+src/com/ignited/wordchain/data/WordList.json
