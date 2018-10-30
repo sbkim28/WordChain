@@ -1,5 +1,7 @@
 package com.ignited.wordchain.play;
 
+import com.ignited.wordchain.util.KoreanUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,9 @@ public class GameManager {
 
     private final List<String> used;
     private int turn;
-    private String chainKey;
+    private String[] chainKey;
+
+    private boolean ruleOfThumb;
 
     public GameManager(List<String> wordList) {
         this(wordList, new ArrayList<>());
@@ -23,7 +27,7 @@ public class GameManager {
     public GameManager(List<String> wordList, List<Player> players) {
         this.wordList = wordList;
         this.players = players;
-        chainKey = "";
+        chainKey = new String[]{"",""};
         used = new ArrayList<>();
     }
 
@@ -37,7 +41,8 @@ public class GameManager {
         while (flag){
             flag = playGames();
         }
-        chainKey = "";
+        chainKey[0] = "";
+        chainKey[1] = "";
     }
 
     private boolean playGames(){
@@ -54,8 +59,8 @@ public class GameManager {
             }
             if (!validate(str)) continue;
 
-            if (chainKey.isEmpty() || str.startsWith(chainKey)) {
-                chainKey = str.substring(str.length() - 1, str.length());
+            if (chainKey[0].isEmpty() || matchThumb(str)) {
+                setChainKey(str);
                 used.add(str);
             } else {
                 System.out.println(addName("첫글자가 일치하지 않습니다"));
@@ -63,6 +68,21 @@ public class GameManager {
             }
             return true;
         }
+    }
+
+    private void setChainKey(String str){
+        chainKey[0] = str.substring(str.length() - 1);
+        String rot = (KoreanUtil.ruleOfThumb(chainKey[0]));
+        chainKey[1] = chainKey[0].equals(rot) ? "" : rot;
+    }
+
+    private boolean matchThumb(String str){
+        boolean flag = false;
+        for (String s : chainKey){
+            if(s.isEmpty()) continue;
+            flag = flag || str.startsWith(s);
+        }
+        return flag;
     }
 
     private boolean validate(String word){

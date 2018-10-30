@@ -7,6 +7,7 @@ import com.ignited.wordchain.data.DataManager;
 import com.ignited.wordchain.play.GameManager;
 import com.ignited.wordchain.play.SimpleAIPlayer;
 import com.ignited.wordchain.play.User;
+import com.ignited.wordchain.util.KoreanUtil;
 
 import java.util.ArrayList;
 import java.util.List;

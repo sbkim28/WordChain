@@ -14,9 +14,9 @@ public class User extends Player {
     }
 
     @Override
-    public String submitWord(String chainKey) {
+    public String submitWord(String... chainKey) {
         try {
-            System.out.print(getName() + ":" + chainKey + "> ");
+            log(chainKey);
             while (true){
                 if(br.ready()){
                     return br.readLine();
