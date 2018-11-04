@@ -12,6 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * SKLDReader
+ *
+ * Reads one of the words contained in the Standard Korean Language Dictionary
+ * @author Ignited
+ */
 public class SKLDReader{
 
     private static final String link = "http://stdweb2.korean.go.kr/search/View.jsp?idx=";
@@ -22,9 +28,16 @@ public class SKLDReader{
     private static final String qAttr = ".list > font";
     private static final String qProperty = ".NumRG font";
     private static final String qLi = "li";
-    private static final String qNumNO = ".NumNO";
     private static final String qDefinition = ".Definition";
 
+    /**
+     * Gets one of the Korean words connecting the Standard Korean Language Dictionary.
+     * Returns null if the index is pointing empty page.
+     *
+     * @param i the index of the Korean word. practically random access
+     * @return the Korean words
+     * @throws IOException when failed to read
+     */
     public static KoreanWord read(int i) throws IOException {
 
         Document doc = Jsoup.connect(link + i).get();
@@ -57,7 +70,6 @@ public class SKLDReader{
 
                     pb.addMeaning(definition.text().trim());
                 }
-                pb.next();
             }
             wb.addProperty(pb.build());
         }

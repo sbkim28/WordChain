@@ -1,8 +1,10 @@
-package com.ignited.wordchain.play;
+package com.ignited.wordchain.play.ai;
+
+import com.ignited.wordchain.play.GameManager;
+import com.ignited.wordchain.play.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SimpleAIPlayer extends Player {
 
@@ -16,14 +18,7 @@ public class SimpleAIPlayer extends Player {
 
     @Override
     public String submitWord(String... chainKey) {
-        List<String> av = manager.getWordList().stream().filter(s -> {
-            boolean flag = false;
-            for(String key : chainKey){
-                if(key.isEmpty()) continue;
-                flag = s.startsWith(key);
-            }
-            return flag&& s.length() >= 2 && !manager.getUsed().contains(s);
-        }).collect(Collectors.toList());
+        List<String> av = manager.usableWord(true);
         String ret;
         if(av.size() == 0){
             ret =  "gg";

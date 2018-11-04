@@ -3,38 +3,43 @@ package com.ignited.wordchain.play;
 import com.ignited.wordchain.util.KoreanUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class GameManager {
 
     private final String NAME = "System";
 
-    private final List<String> wordList;
+    private final Set<String> wordList;
     private final List<Player> players;
 
-    private final List<String> used;
+    private final Set<String> used;
     private int turn;
     private String[] chainKey;
 
-    private boolean ruleOfThumb;
+    private boolean ruleOfThumb = true;
 
-    public GameManager(List<String> wordList) {
+    public GameManager(Set<String> wordList) {
         this(wordList, new ArrayList<>());
     }
 
-    public GameManager(List<String> wordList, List<Player> players) {
+    public GameManager(Set<String> wordList, List<Player> players) {
         this.wordList = wordList;
         this.players = players;
         chainKey = new String[]{"",""};
-        used = new ArrayList<>();
+        used = new HashSet<>();
     }
 
     public List<Player> getPlayers() {
         return players;
     }
 
+    public void setRuleOfThumb(boolean ruleOfThumb) {
+        this.ruleOfThumb = ruleOfThumb;
+    }
 
     public void play(){
         boolean flag = true;
@@ -57,15 +62,19 @@ public class GameManager {
             if (str.equalsIgnoreCase("gg") || str.equals("ㅎㅎ")) {
                 return false;
             }
-            if (!validate(str)) continue;
 
             if (chainKey[0].isEmpty() || matchThumb(str)) {
+
+                if (!validate(str)) continue;
+
                 setChainKey(str);
                 used.add(str);
             } else {
                 System.out.println(addName("첫글자가 일치하지 않습니다"));
                 continue;
             }
+
+
             return true;
         }
     }
@@ -73,7 +82,7 @@ public class GameManager {
     private void setChainKey(String str){
         chainKey[0] = str.substring(str.length() - 1);
         String rot = (KoreanUtil.ruleOfThumb(chainKey[0]));
-        chainKey[1] = chainKey[0].equals(rot) ? "" : rot;
+        chainKey[1] = chainKey[0].equals(rot) || !ruleOfThumb ? "" : rot;
     }
 
     private boolean matchThumb(String str){
@@ -110,12 +119,14 @@ public class GameManager {
         return turn++ % players.size();
     }
 
-
-    List<String> getWordList() {
-        return Collections.unmodifiableList(wordList);
-    }
-
-    List<String> getUsed() {
-        return Collections.unmodifiableList(used);
+    public List<String> usableWord(boolean checkUsed){
+        return wordList.stream().filter(s -> {
+            boolean flag = false;
+            for(String key : chainKey){
+                if(key.isEmpty()) continue;
+                flag = s.startsWith(key);
+            }
+            return flag && (!used.contains(s) || !checkUsed);
+        }).collect(Collectors.toList());
     }
 }
