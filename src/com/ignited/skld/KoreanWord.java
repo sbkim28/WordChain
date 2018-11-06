@@ -3,6 +3,7 @@ package com.ignited.skld;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
  *
  * @author Ignited
  */
-public class KoreanWord implements IWord {
+public class KoreanWord implements IWord, Comparable<KoreanWord> {
 
     private final int homonym;
     private final String word;
@@ -66,6 +67,22 @@ public class KoreanWord implements IWord {
                 ", containsOldHangeul=" + containsOldHangeul +
                 ", properties=" + Arrays.toString(properties) +
                 '}';
+    }
+
+    @Override
+    public int compareTo(KoreanWord o) {
+        return word.compareTo(o.word);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KoreanWord word1 = (KoreanWord) o;
+        return homonym == word1.homonym &&
+                containsOldHangeul == word1.containsOldHangeul &&
+                Objects.equals(word, word1.word) &&
+                Arrays.equals(properties, word1.properties);
     }
 
     /**

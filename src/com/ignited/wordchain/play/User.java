@@ -9,14 +9,13 @@ public class User extends Player {
 
     private BufferedReader br;
     public User(String name) {
-        super(name);
+        super(name, false);
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
     public String submitWord(String... chainKey) {
         try {
-            log(chainKey);
             while (true){
                 if(br.ready()){
                     return br.readLine();

@@ -1,9 +1,6 @@
 package com.ignited.skld;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -12,6 +9,7 @@ import java.util.List;
  * @author Ignited
  */
 public class Property{
+
 
     private final String wordClass;
     private final String[] attributes;
@@ -58,6 +56,15 @@ public class Property{
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Property property = (Property) o;
+        return Objects.equals(wordClass, property.wordClass) &&
+                Arrays.equals(attributes, property.attributes) &&
+                Arrays.equals(meanings, property.meanings);
+    }
 
     /**
      * The Property Builder.

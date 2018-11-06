@@ -1,5 +1,7 @@
 package com.ignited.wordchain.play;
 
+import com.ignited.wordchain.play.ai.ManagerSettable;
+import com.ignited.wordchain.play.print.GamePrintable;
 import com.ignited.wordchain.util.KoreanUtil;
 
 import java.util.ArrayList;
@@ -11,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class GameManager {
 
-    private final String NAME = "System";
-
     private final Set<String> wordList;
     private final List<Player> players;
+    private GamePrintable printable;
+
 
     private final Set<String> used;
     private int turn;
@@ -27,8 +29,18 @@ public class GameManager {
     }
 
     public GameManager(Set<String> wordList, List<Player> players) {
+        this(wordList, players, new GamePrintable() {
+            @Override public void failMsg(FailType ft) { }
+            @Override public void finishMsg(String winner) { }
+            @Override public void playerStateMsg(String player, String... chainKey) { }
+            @Override public void playerSubmit(String sub) { }
+        });
+    }
+
+    public GameManager(Set<String> wordList, List<Player> players, GamePrintable printable) {
         this.wordList = wordList;
         this.players = players;
+        this.printable = printable;
         chainKey = new String[]{"",""};
         used = new HashSet<>();
     }
@@ -37,12 +49,25 @@ public class GameManager {
         return players;
     }
 
+    public void setPrintable(GamePrintable printable) {
+        this.printable = printable;
+    }
+
     public void setRuleOfThumb(boolean ruleOfThumb) {
         this.ruleOfThumb = ruleOfThumb;
     }
 
+    public boolean isRuleOfThumb() {
+        return ruleOfThumb;
+    }
+
     public void play(){
         boolean flag = true;
+        for(Player p : players){
+            if(p instanceof ManagerSettable){
+                ((ManagerSettable) p).setManager(this);
+            }
+        }
         while (flag){
             flag = playGames();
         }
@@ -53,12 +78,16 @@ public class GameManager {
     private boolean playGames(){
         int i = getTurn();
         while (true) {
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                printable.failMsg(GamePrintable.FailType.UNKNOWN);
             }
-            String str = players.get(i).submitWord(chainKey);
+            Player p = players.get(i);
+            printable.playerStateMsg(p.getName(), chainKey);
+            String str = p.submitWord(chainKey);
+            if(p.isPrintSubmit()) printable.playerSubmit(str);
             if (str.equalsIgnoreCase("gg") || str.equals("ㅎㅎ")) {
                 return false;
             }
@@ -70,7 +99,7 @@ public class GameManager {
                 setChainKey(str);
                 used.add(str);
             } else {
-                System.out.println(addName("첫글자가 일치하지 않습니다"));
+                printable.failMsg(GamePrintable.FailType.UNMATCHING_KEY);
                 continue;
             }
 
@@ -97,13 +126,13 @@ public class GameManager {
     private boolean validate(String word){
         boolean flag = false;
         if(word.length() < 2){
-            System.out.println(addName("단어의 길이가 너무 짧습니다."));
+            printable.failMsg(GamePrintable.FailType.TOO_SHORT);
         } else if (!Pattern.matches("^[ㄱ-ㅎ가-힣]*$", word)){
-            System.out.println(addName("올바르지 않은 문자입니다."));
+            printable.failMsg(GamePrintable.FailType.INVALID_LETTERS);
         } else if( !wordList.contains(word)){
-            System.out.println(addName("사전에 없는 단어입니다."));
+            printable.failMsg(GamePrintable.FailType.UNKNOWN_WORD);
         } else if (used.contains(word)){
-            System.out.println(addName("이미 사용한 단어입니다"));
+            printable.failMsg(GamePrintable.FailType.USED_WORD);
         }else {
             flag = true;
         }
@@ -111,15 +140,11 @@ public class GameManager {
         return flag;
     }
 
-    private String addName(String str)
-    {
-        return NAME + ":" + str;
-    }
     private int getTurn(){
         return turn++ % players.size();
     }
 
-    public List<String> usableWord(boolean checkUsed){
+    public Set<String> usableWord(boolean checkUsed){
         return wordList.stream().filter(s -> {
             boolean flag = false;
             for(String key : chainKey){
@@ -127,6 +152,6 @@ public class GameManager {
                 flag = s.startsWith(key);
             }
             return flag && (!used.contains(s) || !checkUsed);
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toSet());
     }
 }

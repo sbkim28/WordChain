@@ -3,9 +3,15 @@ package com.ignited.wordchain.play;
 public abstract class Player {
 
     private String name;
-
+    private boolean printSubmit;
     public Player(String name) {
         this.name = name;
+        printSubmit = true;
+    }
+
+    public Player(String name, boolean printSubmit) {
+        this.name = name;
+        this.printSubmit = printSubmit;
     }
 
     public abstract String submitWord(String... chainKey);
@@ -14,14 +20,8 @@ public abstract class Player {
         return name;
     }
 
-    public void log(String... chainKey){
-        System.out.print(getName() + ":");
-        if(chainKey[1].isEmpty()){
-            System.out.print(chainKey[0]);
-        } else {
-            System.out.print(chainKey[0] + "(" + chainKey[1] + ")");
-        }
-        System.out.print("> ");
+    public boolean isPrintSubmit() {
+        return printSubmit;
     }
 
     @Override
