@@ -149,7 +149,9 @@ public class GameManager {
             boolean flag = false;
             for(String key : chainKey){
                 if(key.isEmpty()) continue;
-                flag = s.startsWith(key);
+                if(s.startsWith(key)){
+                    flag = true;
+                }
             }
             return flag && (!used.contains(s) || !checkUsed);
         }).collect(Collectors.toSet());

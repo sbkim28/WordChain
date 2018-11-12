@@ -20,7 +20,7 @@ public class WordSetAnalyzer {
             update = false;
             for (String tkey : wordMap.keySet()) {
                 TableRow tr = wordMap.get(tkey);
-                update = setDead(wordMap, tr, null) || update;
+                update = setDead(wordMap,tr,null) || update;
 
                 if (tr.value == 0 && !tr.words.values().contains(0)) {
                     tr.value = Collections.max(tr.words.values()) + 1;
@@ -51,7 +51,7 @@ public class WordSetAnalyzer {
             update = false;
             for (String tkey : wordMap.keySet()) {
                 TableRow tr = wordMap.get(tkey);
-                update = setDead(wordMap, tr, tkey) || update;
+                update = setDead(wordMap,tr,tkey) || update;
 
                 Collection<Integer> trValue = tr.words.values();
 
@@ -62,9 +62,9 @@ public class WordSetAnalyzer {
                         if(rotTr.value != 0){
                             tr.value = Math.max(trValue.size() == 0 ? 0 : Collections.max(trValue) + 1,
                                     rotTr.value);
+                            update = true;
                         }
                     }else {
-
                         tr.value = Collections.max(tr.words.values()) + 1;
                         update = true;
                     }
@@ -95,7 +95,7 @@ public class WordSetAnalyzer {
             if(tr.words.get(word) == 0 && value != 0) {
                 tr.words.put(word, value);
                 update = true;
-                if (tr.value == 0 && value % 2 == 1) {
+                if ((tr.value == 0 || value < tr.value) && value % 2 == 1) {
                     tr.value = value + 1;
 
                     if(tkey != null) {
@@ -103,7 +103,7 @@ public class WordSetAnalyzer {
                             if (tkey.equals(rotKey)) break;
                             if (wordMap.containsKey(rotKey)) {
                                 TableRow rotTr = wordMap.get(rotKey);
-                                if (rotTr.value == 0) rotTr.value = value + 1;
+                                if (rotTr.value == 0 || value < rotTr.value) rotTr.value = value + 1;
                             }
                         }
                     }
