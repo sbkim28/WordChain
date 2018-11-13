@@ -18,10 +18,10 @@ import java.util.Set;
 
 public class WordChain {
     public static void main(String args[]){
-        Set<String> wSet = new KoreanWordFilter(true,true,true,true, KoreanWordFilter.WordClass.NOUN)
+
+        Set<String> wSet = new KoreanWordFilter(false,false,false,true, KoreanWordFilter.WordClass.NOUN)
                 .filter(SKLDDataHandler.load(DataManager.getDataAsStream("WordList.json")));
-
-
+        
 
         GameManager p = new GameManager(wSet);
         p.getPlayers().add(new User("USER"));

@@ -20,7 +20,7 @@ public class GameManager {
 
     private final Set<String> used;
     private int turn;
-    private String[] chainKey;
+    private char[] chainKey;
 
     private boolean ruleOfThumb = true;
 
@@ -32,7 +32,7 @@ public class GameManager {
         this(wordList, players, new GamePrintable() {
             @Override public void failMsg(FailType ft) { }
             @Override public void finishMsg(String winner) { }
-            @Override public void playerStateMsg(String player, String... chainKey) { }
+            @Override public void playerStateMsg(String player, char... chainKey) { }
             @Override public void playerSubmit(String sub) { }
         });
     }
@@ -41,7 +41,7 @@ public class GameManager {
         this.wordList = wordList;
         this.players = players;
         this.printable = printable;
-        chainKey = new String[]{"",""};
+        chainKey = new char[]{0, 0};
         used = new HashSet<>();
     }
 
@@ -71,8 +71,8 @@ public class GameManager {
         while (flag){
             flag = playGames();
         }
-        chainKey[0] = "";
-        chainKey[1] = "";
+        chainKey[0] = 0;
+        chainKey[1] = 0;
     }
 
     private boolean playGames(){
@@ -92,7 +92,7 @@ public class GameManager {
                 return false;
             }
 
-            if (chainKey[0].isEmpty() || matchThumb(str)) {
+            if (chainKey[0] == 0 || matchThumb(str)) {
 
                 if (!validate(str)) continue;
 
@@ -109,16 +109,16 @@ public class GameManager {
     }
 
     private void setChainKey(String str){
-        chainKey[0] = str.substring(str.length() - 1);
-        String rot = (KoreanUtil.ruleOfThumb(chainKey[0]));
-        chainKey[1] = chainKey[0].equals(rot) || !ruleOfThumb ? "" : rot;
+        chainKey[0] = str.charAt(str.length() - 1);
+        char rot = KoreanUtil.ruleOfThumb(chainKey[0]);
+        chainKey[1] = chainKey[0] == rot || !ruleOfThumb ? 0 : rot;
     }
 
     private boolean matchThumb(String str){
         boolean flag = false;
-        for (String s : chainKey){
-            if(s.isEmpty()) continue;
-            flag = flag || str.startsWith(s);
+        for (char s : chainKey){
+            if(s == 0) continue;
+            flag = flag || str.charAt(0) == s;
         }
         return flag;
     }
@@ -147,9 +147,9 @@ public class GameManager {
     public Set<String> usableWord(boolean checkUsed){
         return wordList.stream().filter(s -> {
             boolean flag = false;
-            for(String key : chainKey){
-                if(key.isEmpty()) continue;
-                if(s.startsWith(key)){
+            for(char key : chainKey){
+                if(key == 0) continue;
+                if(s.charAt(0) == key){
                     flag = true;
                 }
             }

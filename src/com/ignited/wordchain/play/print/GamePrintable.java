@@ -4,7 +4,7 @@ public interface GamePrintable {
 
     void failMsg(FailType ft);
     void finishMsg(String winner);
-    void playerStateMsg(String player, String... chainKey);
+    void playerStateMsg(String player, char... chainKey);
     void playerSubmit(String sub);
 
     enum FailType {

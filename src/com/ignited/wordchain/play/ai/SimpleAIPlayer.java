@@ -22,7 +22,7 @@ public class SimpleAIPlayer extends Player implements ManagerSettable{
     }
 
     @Override
-    public String submitWord(String... chainKey) {
+    public String submitWord(char... chainKey) {
         List<String> av = new ArrayList<>(manager.usableWord(true));
         String ret;
         if(av.size() == 0){

@@ -9,17 +9,17 @@ import java.util.stream.Stream;
 public class IntermediateAIPlayer extends Player implements ManagerSettable {
 
     private GameManager gm;
-    private Map<String, WordSetAnalyzer.TableRow> wordMap;
+    private Map<Character, WordSetAnalyzer.TableRow> wordMap;
 
     public IntermediateAIPlayer(String name, Collection<String> words, boolean ruleOfThumb) {
         super(name);
-        wordMap = ruleOfThumb ? WordSetAnalyzer.analyzeRuleOfThumb(words) : WordSetAnalyzer.analyze(words);
+        wordMap = ruleOfThumb ? WordSetAnalyzer.createROTWordMap(words) : WordSetAnalyzer.createWordMap(words);
     }
 
 
 
     @Override
-    public String submitWord(String... chainKey) {
+    public String submitWord(char... chainKey) {
         Set<String> av = gm.usableWord(true);
 
         String ret;
@@ -32,16 +32,16 @@ public class IntermediateAIPlayer extends Player implements ManagerSettable {
         return ret;
     }
 
-    private String selectWord(Set<String> av, String... chainKey){
+    private String selectWord(Set<String> av, char... chainKey){
         Map<String, Integer> words;
 
         int p;
-        if(chainKey[1].isEmpty()) {
-            p = wordMap.get(chainKey[0]).getValue();
+        if(chainKey[1] == 0) {
+            p = wordMap.get(chainKey[0]).getKillingIndex();
             words = wordMap.get(chainKey[0]).getWords();
         }else {
             words = new HashMap<>();
-            p = wordMap.get(chainKey[0]).getValue();
+            p = wordMap.get(chainKey[0]).getKillingIndex();
             words.putAll(wordMap.get(chainKey[0]).getWords());
             words.putAll(wordMap.get(chainKey[1]).getWords());
         }
