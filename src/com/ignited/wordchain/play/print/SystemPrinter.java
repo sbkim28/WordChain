@@ -1,5 +1,7 @@
 package com.ignited.wordchain.play.print;
 
+import com.ignited.wordchain.play.env.ActionState;
+
 public class SystemPrinter implements GamePrintable {
 
     private String system;
@@ -12,7 +14,7 @@ public class SystemPrinter implements GamePrintable {
     }
 
     @Override
-    public void failMsg(FailType ft) {
+    public void failMsg(ActionState ft) {
         System.out.print(system + ":");
         switch (ft){
             case UNKNOWN:
@@ -36,7 +38,7 @@ public class SystemPrinter implements GamePrintable {
     @Override
     public void playerStateMsg(String player, char... chainKey) {
         System.out.print(player + ":");
-        if(chainKey[1] == 0){
+        if(chainKey.length == 1 || chainKey[1] == 0){
             System.out.print(chainKey[0]);
         } else {
             System.out.print(chainKey[0] + "(" + chainKey[1] + ")");
