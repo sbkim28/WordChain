@@ -14,7 +14,7 @@ public class User extends Player {
     }
 
     @Override
-    public String submitWord(char... chainKey) {
+    public String submitWord() {
         try {
             while (true){
                 if(br.ready()){

@@ -1,9 +1,12 @@
 package com.ignited.wordchain.play;
 
+import com.ignited.wordchain.play.ai.RewardGettable;
 import com.ignited.wordchain.play.env.ActionState;
 import com.ignited.wordchain.play.env.Environment;
+import com.ignited.wordchain.play.env.GameEnvironment;
 import com.ignited.wordchain.play.print.GamePrintable;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +15,16 @@ public class GameManager {
     private final List<Player> players;
     private GamePrintable printable;
 
-    private Environment gameEnvironment;
+    private GameEnvironment gameEnvironment;
 
     private int turn;
     private char[] chainKey;
 
-    public GameManager(Environment gameEnvironment) {
+    public GameManager(GameEnvironment gameEnvironment) {
         this(gameEnvironment, new ArrayList<>());
     }
 
-    public GameManager(Environment gameEnvironment, List<Player> players) {
+    public GameManager(GameEnvironment gameEnvironment, List<Player> players) {
         this(gameEnvironment, players, new GamePrintable() {
             @Override public void failMsg(ActionState ft) { }
             @Override public void finishMsg(String winner) { }
@@ -30,7 +33,7 @@ public class GameManager {
         });
     }
 
-    public GameManager(Environment gameEnvironment, List<Player> players, GamePrintable printable) {
+    public GameManager(GameEnvironment gameEnvironment, List<Player> players, GamePrintable printable) {
         this.gameEnvironment = gameEnvironment;
         this.players = players;
         this.printable = printable;
@@ -46,10 +49,13 @@ public class GameManager {
     }
 
     public void play(){
+        turn = 0;
         boolean flag = true;
         while (flag){
             flag = playGames();
         }
+        gameEnvironment.reset();
+        chainKey = new char[]{0};
     }
 
     private boolean playGames(){
@@ -58,7 +64,7 @@ public class GameManager {
 
             Player p = players.get(i);
             printable.playerStateMsg(p.getName(), chainKey);
-            String str = p.submitWord(chainKey);
+            String str = p.submitWord();
 
             if(p.isPrintSubmit()) printable.playerSubmit(str);
 
@@ -70,13 +76,19 @@ public class GameManager {
 
             Environment.Result result = gameEnvironment.step(str);
 
-            chainKey = result.getObservation();
-
+            chainKey = result.getState();
+            if(turn > 0){
+                Player prev = players.get((turn - 1) % players.size());
+                if(prev instanceof RewardGettable){
+                    ((RewardGettable) prev).reward(result.getReward());
+                }
+            }
+            ++turn;
             return !result.isDone();
         }
     }
 
-    private int getTurn(){
-        return turn++ % players.size();
+    protected int getTurn(){
+        return turn % players.size();
     }
 }

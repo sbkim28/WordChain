@@ -14,7 +14,7 @@ public abstract class Player {
         this.printSubmit = printSubmit;
     }
 
-    public abstract String submitWord(char... chainKey);
+    public abstract String submitWord();
 
     public String getName() {
         return name;
