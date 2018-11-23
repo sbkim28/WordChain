@@ -3,3 +3,4 @@ out/
 src/META-INF/
 src/com/ignited/wordchain/data/WordList.json
 src/com/ignited/wordchain/play/user/ai/AI.java
+src/com/ignited/TEST.java

@@ -1,5 +1,7 @@
 package com.ignited.wordchain.play.env;
 
+import com.ignited.wordchain.util.KoreanUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -66,9 +68,6 @@ public class GameEnvironment extends Environment {
         state[0] = action.charAt(at.keywordSet(action));
     }
 
-
-    // todo
-
     public class Informer {
 
         protected Map<Character, Map<String, Float>> table;
@@ -91,6 +90,18 @@ public class GameEnvironment extends Environment {
                     table.put(end, new HashMap<>());
                 }
                 table.get(start).put(word, 0f);
+            }
+            if(state.length == 2) {
+                initializeROTTable(table);
+            }
+        }
+
+        private void initializeROTTable(Map<Character, Map<String, Float>> table) {
+            for(Character key : table.keySet()){
+                char rotKey = KoreanUtil.ruleOfThumb(key);
+                if(rotKey != key && table.containsKey(rotKey)){
+                    table.get(key).putAll(table.get(rotKey));
+                }
             }
         }
 

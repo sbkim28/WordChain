@@ -39,19 +39,4 @@ public class ROTEnvironment extends GameEnvironment {
         state[1] = state[0] == rot ? 0 : rot;
     }
 
-    public class ROTInformer extends Informer {
-
-        public ROTInformer() { }
-
-        @Override
-        public void initializeTable(Map<Character, Map<String, Float>> table) {
-            super.initializeTable(table);
-            for(Character key : table.keySet()){
-                char rotKey = KoreanUtil.ruleOfThumb(key);
-                if(rotKey != key && table.containsKey(rotKey)){
-                    table.get(key).putAll(table.get(rotKey));
-                }
-            }
-        }
-    }
 }

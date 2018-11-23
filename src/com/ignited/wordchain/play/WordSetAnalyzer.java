@@ -107,6 +107,28 @@ public class WordSetAnalyzer {
         }
     }
 
+    public static void initMiddleMap(Map<Character, TableRow> map, Collection<String> words, boolean rot){
+        for (String word : words){
+            if(word.length() % 2 == 0) continue;
+            char start = word.charAt(0);
+            char end = word.charAt((word.length() - 1) / 2);
+            if(!map.containsKey(start)){
+                map.put(start, new TableRow());
+            }
+            if(!map.containsKey(end)){
+                map.put(end, new TableRow());
+            }
+            map.get(start).words.put(word,0);
+        }
+        if(rot){
+            for(Character key : map.keySet()){
+                char rotKey = KoreanUtil.ruleOfThumb(key);
+                if(rotKey != key && map.containsKey(rotKey)){
+                    map.get(key).words.putAll(map.get(rotKey).words);
+                }
+            }
+        }
+    }
 
 
     public static class TableRow {

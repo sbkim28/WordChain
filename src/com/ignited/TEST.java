@@ -20,79 +20,22 @@ public class TEST {
     }
 
     public static void analyze(Collection<String> wSet){
-        /*
-         할 - 팽할 - 할팽 - 교할 - 흰진교
 
-         낱 죽 2
-         됨 죽 2
-         뽀 죽 2
-         헤 죽음 4
-         협 죽 4
-         은 죽 4
-         흉 죽 4
-         렘 죽 4
-         참 죽 4
-         엠 죽 4
-         잡 죽 6
-         삐 죽 4
-         톰 죽 4
-         펙 한 5
-         씀 한 5
-         켈 한 5
-         츨 한 5
-         옴 한 5
-         녜 한 5
-         슛 한 5
-         삶 한 5
-         짬 한 5
-         룽 한 5
-         밋 죽 6
-         빈 죽 6
-         팡 죽 6
-         훔 죽 6
-         춘 죽 6
-         쯔 죽 6
-         훼 한 7 ~훼 폄훼 훼예포폄 참훼 할참
-         굉 죽 8
-         괴 죽 8
-         멸 죽 8
-         척 죽 8
-         죄 죽 8
-         팍 한 9
-         확 한 9
-         델 한 9
-         푼 죽 10
-         팽 죽 10
-         견 죽 10
-         샬 한 11
-
-         훤 한 11
-         쟁 죽 12
-          */
-        char[] dead = new char[]{'뽀', '됨', '낱', '엠', '삐', '톰','잡', '헤', '협', '은', '흉', '렘', '참',  '밋', '빈', '팡', '훔', '춘', '쯔', '굉', '괴', '멸', '척', '죄', '푼', '팽', '견', '쟁' };
         Map<Character, WordSetAnalyzer.TableRow> wordMap = new HashMap<>();
-        WordSetAnalyzer.initFirstMap(wordMap, wSet, true);
+        WordSetAnalyzer.initMiddleMap(wordMap, wSet, true);
         WordSetAnalyzer.createWordMap(wordMap, new KeywordAt() {
             @Override
-            public int keywordSet(String word) {
-                return 0;
-            }
-
+            public int keywordSet(String word) { return (word.length() - 1) / 2; }
             @Override
-            public int keywordGet(String word) {
-                return word.length() - 1;
-            }
+            public int keywordGet(String word) { return 0; }
         });
 
         Map<Character, Set<String>> undyingCells = new HashMap<>();
-        l : for (Character tkey : wordMap.keySet()){
+        for (Character tkey : wordMap.keySet()){
             WordSetAnalyzer.TableRow tr = wordMap.get(tkey);
-            //for (char c : dead){
-            //   if(c == tkey) continue l;
-            //}
             if(tr.getKillingIndex() == 0) {
                 Set<String> undyingWords = new HashSet<>();
-                label : for (String words : tr.getWords().keySet()){
+                for (String words : tr.getWords().keySet()){
                     if(tr.getWords().get(words) == 0){
                         undyingWords.add(words);
                     }
@@ -101,9 +44,11 @@ public class TEST {
                 undyingCells.put(tkey, undyingWords);
             }
         }
+
         List<Character> undying = new ArrayList<>(undyingCells.keySet());
         undying.sort(Character::compareTo);
         System.out.println(undying);
+        System.out.println(undyingCells);
 
         List<Character> clist = new ArrayList<>(wordMap.keySet());
         clist.sort(Character::compareTo);
