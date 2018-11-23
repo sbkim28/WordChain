@@ -1,16 +1,22 @@
 package com.ignited.wordchain.play.env;
 
-import com.ignited.skld.Word;
-import com.ignited.wordchain.play.ai.WordSetAnalyzer;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class GameEnvironment extends Environment {
 
+    protected KeywordAt at;
+
     public GameEnvironment(Set<String> words) {
+        this(words, new DefaultKeywordAt());
+    }
+
+    public GameEnvironment(Set<String> words, KeywordAt at) {
         super(words);
-        state = new char[1];
+        this.at = at;
     }
 
     @Override
@@ -53,11 +59,11 @@ public class GameEnvironment extends Environment {
     }
 
     protected boolean match(String action){
-        return action.charAt(0) == state[0] || state[0] == 0;
+        return action.charAt(at.keywordGet(action)) == state[0] || state[0] == 0;
     }
 
     protected void setState(String action){
-        state[0] = action.charAt(action.length() - 1);
+        state[0] = action.charAt(at.keywordSet(action));
     }
 
 

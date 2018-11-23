@@ -1,13 +1,30 @@
-package com.ignited.wordchain.play.ai;
+package com.ignited.wordchain.play;
 
 
+import com.ignited.wordchain.play.env.KeywordAt;
 import com.ignited.wordchain.util.KoreanUtil;
 
 import java.util.*;
 
 public class WordSetAnalyzer {
 
+
+
     public static Map<Character, TableRow> createWordMap(Map<Character, TableRow> map){
+        return createWordMap(map, new KeywordAt() {
+            @Override
+            public int keywordSet(String word) {
+                return word.length() - 1;
+            }
+
+            @Override
+            public int keywordGet(String word) {
+                return 0;
+            }
+        });
+    }
+
+    public static Map<Character, TableRow> createWordMap(Map<Character, TableRow> map, KeywordAt at){
         boolean update;
         do{
             update = false;
@@ -16,7 +33,7 @@ public class WordSetAnalyzer {
                 int containsM = 0;
 
                 for (String word : tr.words.keySet()) {
-                    int eKills = map.get(word.charAt(word.length() - 1)).killingIndex;
+                    int eKills = map.get(word.charAt(at.keywordSet(word))).killingIndex;
                     if(eKills == 0){
                         containsM = -1;
                     }else if (tr.words.get(word) == 0 || tr.words.get(word) != eKills) {
@@ -45,7 +62,7 @@ public class WordSetAnalyzer {
         return map;
     }
 
-    public static void initMap(Map<Character, TableRow> map, Collection<String> words){
+    public static void initMap(Map<Character, TableRow> map, Collection<String> words, boolean rot){
         for(String word : words){
             char start = word.charAt(0);
             char end = word.charAt(word.length() - 1);
@@ -58,17 +75,39 @@ public class WordSetAnalyzer {
             }
             map.get(start).words.put(word, 0);
         }
-    }
-    public static void initROTMap(Map<Character, TableRow> map, Collection<String> words){
-        initMap(map,words);
-
-        for(Character key : map.keySet()){
-            char rotKey = KoreanUtil.ruleOfThumb(key);
-            if(rotKey != key && map.containsKey(rotKey)){
-                map.get(key).words.putAll(map.get(rotKey).words);
+        if(rot){
+            for(Character key : map.keySet()){
+                char rotKey = KoreanUtil.ruleOfThumb(key);
+                if(rotKey != key && map.containsKey(rotKey)){
+                    map.get(key).words.putAll(map.get(rotKey).words);
+                }
             }
         }
     }
+
+    public static void initFirstMap(Map<Character, TableRow> map, Collection<String> words, boolean rot){
+        for (String word : words){
+            char start = word.charAt(0);
+            char end = word.charAt(word.length() - 1);
+            if(!map.containsKey(start)){
+                map.put(start, new TableRow());
+            }
+            if(!map.containsKey(end)){
+                map.put(end, new TableRow());
+            }
+            map.get(end).words.put(word,0);
+        }
+        if(rot){
+            for(Character key : map.keySet()){
+                char rotKey = KoreanUtil.ruleOfThumb(key);
+                if(rotKey != key && map.containsKey(rotKey)){
+                    map.get(key).words.putAll(map.get(rotKey).words);
+                }
+            }
+        }
+    }
+
+
 
     public static class TableRow {
         private int killingIndex;

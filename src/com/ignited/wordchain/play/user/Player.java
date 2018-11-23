@@ -1,4 +1,4 @@
-package com.ignited.wordchain.play;
+package com.ignited.wordchain.play.user;
 
 public abstract class Player {
 

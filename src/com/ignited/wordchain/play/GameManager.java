@@ -1,12 +1,12 @@
 package com.ignited.wordchain.play;
 
-import com.ignited.wordchain.play.ai.RewardGettable;
+import com.ignited.wordchain.play.user.ai.RewardGettable;
 import com.ignited.wordchain.play.env.ActionState;
 import com.ignited.wordchain.play.env.Environment;
 import com.ignited.wordchain.play.env.GameEnvironment;
 import com.ignited.wordchain.play.print.GamePrintable;
+import com.ignited.wordchain.play.user.Player;
 
-import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
 

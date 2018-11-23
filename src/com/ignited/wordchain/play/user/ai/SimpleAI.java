@@ -1,6 +1,6 @@
-package com.ignited.wordchain.play.ai;
+package com.ignited.wordchain.play.user.ai;
 
-import com.ignited.wordchain.play.Player;
+import com.ignited.wordchain.play.user.Player;
 import com.ignited.wordchain.play.env.GameEnvironment;
 
 public class SimpleAI extends Player {

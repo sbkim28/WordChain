@@ -1,15 +1,19 @@
 package com.ignited.wordchain.play.env;
 
-import com.ignited.wordchain.play.ai.WordSetAnalyzer;
 import com.ignited.wordchain.util.KoreanUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class ROTEnvironment extends GameEnvironment {
+
     public ROTEnvironment(Set<String> words) {
         super(words);
+        state = new char[2];
+    }
+
+    public ROTEnvironment(Set<String> words, KeywordAt at) {
+        super(words, at);
         state = new char[2];
     }
 
@@ -24,7 +28,7 @@ public class ROTEnvironment extends GameEnvironment {
         if(state[1] == 0){
             return super.match(action);
         }else {
-            return super.match(action) || state[1] == action.charAt(0);
+            return super.match(action) || state[1] == action.charAt(at.keywordGet(action));
         }
     }
 
