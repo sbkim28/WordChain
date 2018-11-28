@@ -6,7 +6,7 @@ public interface GamePrintable {
 
     void failMsg(ActionState as);
     void finishMsg(String winner);
-    void playerStateMsg(String player, char... chainKey);
+    void playerStateMsg(String player, String chainKey);
     void playerSubmit(String sub);
 
 

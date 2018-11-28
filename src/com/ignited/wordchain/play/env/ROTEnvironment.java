@@ -9,34 +9,38 @@ public class ROTEnvironment extends GameEnvironment {
 
     public ROTEnvironment(Set<String> words) {
         super(words);
-        state = new char[2];
     }
 
     public ROTEnvironment(Set<String> words, KeywordAt at) {
         super(words, at);
-        state = new char[2];
     }
 
     @Override
     public void reset() {
         super.reset();
-        state = new char[2];
     }
 
     @Override
     protected boolean match(String action) {
-        if(state[1] == 0){
-            return super.match(action);
+        char rot = KoreanUtil.ruleOfThumb(state);
+        return super.match(action) || rot == at.keywordGet(action);
+
+    }
+
+    @Override
+    public String getState() {
+        char rot = KoreanUtil.ruleOfThumb(state);
+        if(rot == state) {
+            return super.getState();
         }else {
-            return super.match(action) || state[1] == action.charAt(at.keywordGet(action));
+            return state + "(" + rot + ")";
         }
     }
 
     @Override
-    protected void setState(String action) {
-        super.setState(action);
-        char rot = KoreanUtil.ruleOfThumb(state[0]);
-        state[1] = state[0] == rot ? 0 : rot;
+    protected boolean isROT() {
+        return true;
     }
+
 
 }

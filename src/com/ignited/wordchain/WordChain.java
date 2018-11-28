@@ -7,6 +7,7 @@ import com.ignited.wordchain.play.user.User;
 import com.ignited.wordchain.play.env.GameEnvironment;
 import com.ignited.wordchain.play.env.ROTEnvironment;
 import com.ignited.wordchain.play.print.SystemPrinter;
+import com.ignited.wordchain.play.user.ai.RandomAI;
 import com.ignited.wordchain.word.KoreanWordFilter;
 
 import java.util.*;
@@ -23,9 +24,7 @@ public class WordChain {
 
         GameEnvironment environment = new ROTEnvironment(wSet, new DefaultKeywordAt());
 
-        GameManager p = new GameManager(environment);
-        p.getPlayers().add(new User("USER1"));
-        p.getPlayers().add(new User("USER2"));
+        GameManager p = new GameManager(environment, new User("USER1"), new RandomAI("AI", environment.new Informer()));
         p.setPrintable(new SystemPrinter());
         System.out.println("게임 로딩 완료");
         p.play();

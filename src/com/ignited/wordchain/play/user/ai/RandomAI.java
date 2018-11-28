@@ -14,6 +14,6 @@ public class RandomAI extends Player {
 
     @Override
     public String submitWord() {
-        return informer.sample();
+        return informer.getRandomAction();
     }
 }

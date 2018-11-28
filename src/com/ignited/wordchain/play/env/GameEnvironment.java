@@ -2,8 +2,8 @@ package com.ignited.wordchain.play.env;
 
 import com.ignited.wordchain.util.KoreanUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ public class GameEnvironment extends Environment {
 
     @Override
     public void reset() {
-        state = new char[1];
+        state = 0;
         used.clear();
     }
 
@@ -32,10 +32,10 @@ public class GameEnvironment extends Environment {
         ActionState ret;
         if (surrender(action)) {
             ret = ActionState.SUCCESS;
-        }else if(!match(action)) {
-            ret = ActionState.UNMATCHING_KEY;
         }else if(action.length() < 2){
             ret = ActionState.TOO_SHORT;
+        }else if(!match(action)) {
+            ret = ActionState.UNMATCHING_KEY;
         }else if(!Pattern.matches("^[ㄱ-ㅎ가-힣]*$", action)){
             ret = ActionState.INVALID_LETTERS;
         }else if(!words.contains(action)){
@@ -53,7 +53,9 @@ public class GameEnvironment extends Environment {
         setState(action);
         used.add(action);
         boolean sur = surrender(action);
-        return new Result(state, sur, sur ? 5 : 0);
+
+
+        return new Result(state, sur, sur ? 1 : 0);
     }
 
     private boolean surrender(String action){
@@ -61,68 +63,51 @@ public class GameEnvironment extends Environment {
     }
 
     protected boolean match(String action){
-        return action.charAt(at.keywordGet(action)) == state[0] || state[0] == 0;
+        return at.keywordGet(action) == state || state == 0;
     }
 
     protected void setState(String action){
-        state[0] = action.charAt(at.keywordSet(action));
+        state = at.keywordSet(action);
+    }
+
+    public String getState(){
+        return String.valueOf(state);
+    }
+
+    protected boolean isROT(){
+        return false;
     }
 
     public class Informer {
 
-        protected Map<Character, Map<String, Float>> table;
         private Random random;
 
         public Informer() {
-            table = new HashMap<>();
-            initializeTable(table);
+            random = new Random();
         }
 
-        public void initializeTable(Map<Character, Map<String, Float>> table){
+        public List<String> getActions(char state){
+            List<String> actions = new ArrayList<>();
             for(String word : words){
-                char start = word.charAt(0);
-                char end = word.charAt(word.length() - 1);
-
-                if(!table.containsKey(start)){
-                    table.put(start, new HashMap<>());
+                char first = at.keywordGet(word);
+                if(first == state || (isROT() && KoreanUtil.ruleOfThumb(state) == first)){
+                    if(!used.contains(word)){
+                        actions.add(word);
+                    }
                 }
-                if(!table.containsKey(end)){
-                    table.put(end, new HashMap<>());
-                }
-                table.get(start).put(word, 0f);
             }
-            if(state.length == 2) {
-                initializeROTTable(table);
-            }
+            return actions;
         }
 
-        private void initializeROTTable(Map<Character, Map<String, Float>> table) {
-            for(Character key : table.keySet()){
-                char rotKey = KoreanUtil.ruleOfThumb(key);
-                if(rotKey != key && table.containsKey(rotKey)){
-                    table.get(key).putAll(table.get(rotKey));
-                }
+        public String getRandomAction(){
+            List<String> actions = getActions(state);
+            String ret;
+            if(actions.size() == 0){
+                ret = "gg";
+            }else {
+                ret = actions.get(random.nextInt(actions.size()));
             }
-        }
-
-        public String sample(){
-
-            if(state[0] == 0){
-                // tmp;
-                return "가축";
-            }
-            String[] words = table.get(state[0])
-                    .keySet().stream()
-                    .filter(s -> !used.contains(s))
-                    .toArray(String[]::new);
-
-            if(words.length == 0) return "gg";
-            else {
-                if (random == null) {
-                    random = new Random();
-                }
-                return words[random.nextInt(words.length)];
-            }
+            return ret;
         }
     }
 }

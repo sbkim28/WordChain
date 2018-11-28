@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class Environment {
 
     protected Set<String> used;
-    protected char[] state;
+    protected char state;
     protected Set<String> words;
 
     public Environment(Set<String> words) {
@@ -22,17 +22,17 @@ public abstract class Environment {
 
     public static class Result {
 
-        private char[] state;
+        private char state;
         private boolean done;
         private float reward;
 
-        public Result(char[] state, boolean done, float reward) {
+        public Result(char state, boolean done, int reward) {
             this.state = state;
             this.done = done;
             this.reward = reward;
         }
 
-        public char[] getState() {
+        public char getState() {
             return state;
         }
 

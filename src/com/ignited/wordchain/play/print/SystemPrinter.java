@@ -36,14 +36,8 @@ public class SystemPrinter implements GamePrintable {
     public void finishMsg(String winner) { }
 
     @Override
-    public void playerStateMsg(String player, char... chainKey) {
-        System.out.print(player + ":");
-        if(chainKey.length == 1 || chainKey[1] == 0){
-            System.out.print(chainKey[0]);
-        } else {
-            System.out.print(chainKey[0] + "(" + chainKey[1] + ")");
-        }
-        System.out.print("> ");
+    public void playerStateMsg(String player, String chainKey) {
+        System.out.print(player + ":" + chainKey + "> ");
     }
 
     @Override
