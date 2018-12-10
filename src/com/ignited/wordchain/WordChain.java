@@ -1,6 +1,7 @@
 package com.ignited.wordchain;
 import com.ignited.skld.SKLDDataHandler;
 import com.ignited.wordchain.data.DataManager;
+import com.ignited.wordchain.play.WordSetAnalyzer;
 import com.ignited.wordchain.play.env.DefaultKeywordAt;
 import com.ignited.wordchain.play.GameManager;
 import com.ignited.wordchain.play.user.User;
@@ -28,7 +29,6 @@ public class WordChain {
         p.setPrintable(new SystemPrinter());
         System.out.println("게임 로딩 완료");
         p.play();
-
 
     }
 

@@ -82,10 +82,6 @@ public class WordSetAnalyzer {
         initMap(map, words, rot, null, new DefaultKeywordAt());
     }
 
-    public static void rate(Map<Character, TableRow> map){
-
-    }
-
     public static class TableRow {
         private int killingIndex;
         private Map<String, Integer> words;

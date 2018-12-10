@@ -17,12 +17,15 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
     private final String word;
     private final boolean containsOldHangeul;
     private final Property[] properties;
+    private final boolean space;
+
 
     private KoreanWord(Builder builder){
         this.homonym = builder.homonym;
         this.word = builder.word;
         this.containsOldHangeul = builder.containsOldHangeul;
         this.properties = builder.properties.toArray(new Property[0]);
+        this.space = builder.space;
     }
 
     /**
@@ -94,12 +97,24 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
         private String word;
         private boolean containsOldHangeul;
         private final List<Property> properties;
+        private boolean space;
 
         /**
          * Instantiates a new Builder.
          */
         public Builder() {
             properties = new ArrayList<>();
+        }
+
+        /**
+         * Sets if the word contains space.
+         *
+         * @param space the space
+         * @return this
+         */
+        public Builder setSpace(boolean space) {
+            this.space = space;
+            return this;
         }
 
         /**
