@@ -78,7 +78,6 @@ public class SKLDReader{
     }
 
     private static KoreanWord.Builder getWord(String raw){
-        boolean space = raw.contains("^");
         String word = raw.replaceAll("[-^ㆍ]","");
 
         int number = 1;
@@ -90,6 +89,6 @@ public class SKLDReader{
             word = word.substring(0, word.indexOf(strNum));
         }
 
-        return new KoreanWord.Builder().setWord(word).setHomonym(number).setSpace(space);
+        return new KoreanWord.Builder().setWord(word).setHomonym(number);
     }
 }

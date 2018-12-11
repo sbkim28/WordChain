@@ -3,6 +3,7 @@ package com.ignited.skld;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * SKLDCollector
@@ -12,6 +13,8 @@ import java.util.List;
  * @author Ignited
  */
 public class SKLDCollector {
+
+    private static final Logger LOGGER = Logger.getLogger(SKLDCollector.class.getName());
 
 
     /**

@@ -14,22 +14,24 @@ public class KoreanWordFilter implements WordFilter<KoreanWord> {
     private boolean allowOldKorean;
     private boolean allowDialect;
     private boolean allowFaultyWord;
+    private boolean allowRadix;
 
     public KoreanWordFilter() {
         this(WordClass.NOUN);
     }
 
     public KoreanWordFilter(WordClass... usableClass) {
-        this(false,false,false,true,
+        this(false,false,false,true, false,
                 usableClass);
     }
 
-    public KoreanWordFilter(boolean allowNorthKorean, boolean allowOldKorean, boolean allowDialect, boolean allowFaultyWord, WordClass... usableClass) {
+    public KoreanWordFilter(boolean allowNorthKorean, boolean allowOldKorean, boolean allowDialect, boolean allowFaultyWord, boolean allowRadix, WordClass... usableClass) {
         this.usableClass = new ArrayList<>(Arrays.asList(usableClass));
         this.allowNorthKorean = allowNorthKorean;
         this.allowOldKorean = allowOldKorean;
         this.allowDialect = allowDialect;
         this.allowFaultyWord = allowFaultyWord;
+        this.allowRadix = allowRadix;
     }
 
     public List<WordClass> getUsableClass() {
@@ -41,7 +43,7 @@ public class KoreanWordFilter implements WordFilter<KoreanWord> {
         Set<String> wordSet = new HashSet<>();
         for (KoreanWord word : words){
             if(usable(word) && validProperties(word)){
-                wordSet.add(word.getWord());
+                wordSet.add(word.getWord().replace(" ", ""));
             }
         }
         return wordSet;
@@ -76,6 +78,7 @@ public class KoreanWordFilter implements WordFilter<KoreanWord> {
     }
 
     private boolean confirmMeanings(String[] meanings){
+
         boolean r = false;
         for (String m : meanings){
             // exception
@@ -86,10 +89,13 @@ public class KoreanWordFilter implements WordFilter<KoreanWord> {
                 int a = m.indexOf("『");
                 int b = m.indexOf("』");
                 if(a == -1 || !invalidAttr(m.substring(a, b))){
-                    r= true;
-                    break;
+                    if(allowRadix || !m.matches("‘(.*?)’의 어근\\.")){
+                        r = true;
+                        break;
+                    }
                 }
             }
+
         }
         return r;
     }

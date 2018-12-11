@@ -20,7 +20,8 @@ public class WordChain {
                 .filter(SKLDDataHandler.load(DataManager.getDataAsStream("WordList.json")));
 */
 
-        Set<String> wSet = new KoreanWordFilter(false, false, false, false, KoreanWordFilter.WordClass.NOUN)
+
+        Set<String> wSet = new KoreanWordFilter(false, false, false, false, false, KoreanWordFilter.WordClass.NOUN)
                 .filter(SKLDDataHandler.load(DataManager.getDataAsStream("WordList.json")));
 
         GameEnvironment environment = new ROTEnvironment(wSet, new DefaultKeywordAt());

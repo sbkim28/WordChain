@@ -15,17 +15,13 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
 
     private final int homonym;
     private final String word;
-    private final boolean containsOldHangeul;
     private final Property[] properties;
-    private final boolean space;
 
 
     private KoreanWord(Builder builder){
         this.homonym = builder.homonym;
         this.word = builder.word;
-        this.containsOldHangeul = builder.containsOldHangeul;
         this.properties = builder.properties.toArray(new Property[0]);
-        this.space = builder.space;
     }
 
     /**
@@ -49,7 +45,7 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
      * @return whether the word contains old hangeul or not
      */
     public boolean containsOldHangeul() {
-        return containsOldHangeul;
+        return !Pattern.matches("^[ㄱ-ㅎㅏ-ㅣ가-힣 ]*$", word);
     }
 
     /**
@@ -67,7 +63,7 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
         return "Word{" +
                 "homonym=" + homonym +
                 ", word='" + word + '\'' +
-                ", containsOldHangeul=" + containsOldHangeul +
+                ", containsOldHangeul=" + containsOldHangeul() +
                 ", properties=" + Arrays.toString(properties) +
                 '}';
     }
@@ -83,7 +79,6 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
         if (o == null || getClass() != o.getClass()) return false;
         KoreanWord word1 = (KoreanWord) o;
         return homonym == word1.homonym &&
-                containsOldHangeul == word1.containsOldHangeul &&
                 Objects.equals(word, word1.word) &&
                 Arrays.equals(properties, word1.properties);
     }
@@ -95,26 +90,13 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
     public static final class Builder {
         private int homonym;
         private String word;
-        private boolean containsOldHangeul;
         private final List<Property> properties;
-        private boolean space;
 
         /**
          * Instantiates a new Builder.
          */
         public Builder() {
             properties = new ArrayList<>();
-        }
-
-        /**
-         * Sets if the word contains space.
-         *
-         * @param space the space
-         * @return this
-         */
-        public Builder setSpace(boolean space) {
-            this.space = space;
-            return this;
         }
 
         /**
@@ -137,12 +119,7 @@ public class KoreanWord implements IWord, Comparable<KoreanWord> {
          */
         public Builder setWord(String word){
             this.word = word;
-            containsOldHangeul = containsOldHangeul(word);
             return this;
-        }
-
-        private boolean containsOldHangeul(String word){
-            return !Pattern.matches("^[ㄱ-ㅎㅏ-ㅣ가-힣]*$", word);
         }
 
         /**
