@@ -10,6 +10,7 @@ public class Environment {
     private final Player[] players = new Player[2];
 
     private char currentCharacter = '\0';
+    private String playerWord;
 
     public Environment(Player player1, Player player2) {
         players[0] = player1;
@@ -33,20 +34,20 @@ public class Environment {
             char subCharacter = KoreanUtils.getSubChar(currentCharacter);
             player.notifyTurn(currentCharacter, subCharacter);
 
-            var wordWrapper = new Object(){ String word = null; };
+            playerWord = null;
 
             Thread turn = new Thread(() -> {
-                String playerWord;
+                String word;
 
                 while (true) {
-                    playerWord = player.getWord();
-                    char c = playerWord.charAt(0);
+                    word = player.getWord();
+                    char c = word.charAt(0);
                     if (currentCharacter == '\0' || c == currentCharacter || c == subCharacter) break;
-                    player.notifySuccessed(false);
+                    player.notifySuccess(false);
                 }
 
-                wordWrapper.word = playerWord;
-                player.notifySuccessed(true);
+                playerWord = word;
+                player.notifySuccess(true);
             });
 
             turn.start();
@@ -56,14 +57,12 @@ public class Environment {
                 e.printStackTrace();
             }
 
-            String word = wordWrapper.word;
-
-            if(word == null) {
+            if(playerWord == null) {
                 // Current player lost
                 return;
             }
 
-            currentCharacter = word.charAt(word.length() - 1);
+            currentCharacter = playerWord.charAt(playerWord.length() - 1);
             currentPlayerIndex ^= 1;
         }
     }
