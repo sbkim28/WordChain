@@ -82,7 +82,7 @@ public class Environment {
             }
 
             if(playerWord == null) {
-                // Current player lost
+                player.notifyGameOver();
                 return;
             }
 
