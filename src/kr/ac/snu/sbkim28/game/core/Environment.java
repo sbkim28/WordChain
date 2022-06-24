@@ -2,19 +2,29 @@ package kr.ac.snu.sbkim28.game.core;
 
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Environment {
     private static final int NUM_ROUNDS = 3;
     private static final int MS_TIMEOUT = 3000;
 
     private int currentPlayerIndex = 0;
-    private final Player[] players = new Player[2];
+    private final Player[] players;
+    private Set<String> wordSet;
 
     private char currentCharacter = '\0';
     private String playerWord;
 
     public Environment(Player player1, Player player2) {
+        players = new Player[2];
+        wordSet = new HashSet<>();
         players[0] = player1;
         players[1] = player2;
+    }
+
+    public void setWordSet(Set<String> wordSet) {
+        this.wordSet = wordSet;
     }
 
     public void runGame() {
@@ -41,8 +51,12 @@ public class Environment {
 
                 while (true) {
                     word = player.getWord();
-                    char c = word.charAt(0);
-                    if (currentCharacter == '\0' || c == currentCharacter || c == subCharacter) break;
+                    if (word == null) break;
+                    if (!word.isEmpty()) {
+                        char c = word.charAt(0);
+                        if (wordSet.contains(word) && (currentCharacter == '\0' || c == currentCharacter || c == subCharacter))
+                            break;
+                    }
                     player.notifySuccess(false);
                 }
 
