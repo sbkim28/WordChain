@@ -7,11 +7,12 @@ import java.util.Set;
 
 public class Environment {
     private static final int NUM_ROUNDS = 3;
-    private static final int MS_TIMEOUT = 3000;
+    private static final int MS_TIMEOUT = 10000;
 
     private int currentPlayerIndex = 0;
     private final Player[] players;
     private Set<String> wordSet;
+    private Set<String> usedWordSet;
 
     private char currentCharacter = '\0';
     private String playerWord;
@@ -19,6 +20,7 @@ public class Environment {
     public Environment(Player player1, Player player2) {
         players = new Player[2];
         wordSet = new HashSet<>();
+        usedWordSet = new HashSet<>();
         players[0] = player1;
         players[1] = player2;
     }
@@ -29,6 +31,7 @@ public class Environment {
 
     public void runGame() {
         for (int i = 0; i < NUM_ROUNDS; ++i) {
+            System.out.println("Round #" + i);
             runRound();
         }
 
@@ -38,6 +41,9 @@ public class Environment {
     }
 
     private void runRound() {
+        currentCharacter = '\0';
+        usedWordSet.clear();
+
         while(true) {
             Player player = players[currentPlayerIndex];
 
@@ -50,11 +56,15 @@ public class Environment {
                 String word;
 
                 while (true) {
+                    System.out.print("[P" + (currentPlayerIndex+1) + "] ");
                     word = player.getWord();
                     if (word == null) break;
                     if (!word.isEmpty()) {
                         char c = word.charAt(0);
-                        if (wordSet.contains(word) && (currentCharacter == '\0' || c == currentCharacter || c == subCharacter))
+                        boolean knownWord = wordSet.contains(word);
+                        boolean notUsedWord = !usedWordSet.contains(word);
+                        boolean followingWord = (currentCharacter == '\0' || c == currentCharacter || c == subCharacter);
+                        if (knownWord && notUsedWord && followingWord)
                             break;
                     }
                     player.notifySuccess(false);
@@ -75,6 +85,8 @@ public class Environment {
                 // Current player lost
                 return;
             }
+
+            usedWordSet.add(playerWord);
 
             currentCharacter = playerWord.charAt(playerWord.length() - 1);
             currentPlayerIndex ^= 1;
