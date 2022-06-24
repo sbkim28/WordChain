@@ -41,7 +41,7 @@ public class Environment {
                 while (true) {
                     playerWord = player.getWord();
                     char c = playerWord.charAt(0);
-                    if (currentCharacter != '\0' && (c == currentCharacter || c == subCharacter)) break;
+                    if (currentCharacter == '\0' || c == currentCharacter || c == subCharacter) break;
                     player.notifySuccessed(false);
                 }
 
