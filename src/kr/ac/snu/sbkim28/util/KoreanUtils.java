@@ -98,6 +98,11 @@ public class KoreanUtils {
         }
         return i;
     }
+
+    public static char getSubChar(char c) {
+        return convert2char(getSubIndex(convert2int(c)));
+    }
+
     public static int convert2int(char c){
         return (c - 1421) % 42611;
     }
@@ -105,6 +110,4 @@ public class KoreanUtils {
     public static char convert2char(int i){
         return (char) (i < 11172 ? i + 42611 + 1421 : i + 1421);
     }
-
-
 }
