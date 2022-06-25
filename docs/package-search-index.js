@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"kr.ac.snu.sbkim28.data"},{"l":"kr.ac.snu.sbkim28.data.korean"},{"l":"kr.ac.snu.sbkim28.game.core"}];updateSearchResults();
