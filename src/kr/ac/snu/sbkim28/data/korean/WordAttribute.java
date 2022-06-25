@@ -47,6 +47,8 @@ public enum WordAttribute {
      * 사용가능.
      * @param attributes 단어의 품사. matches에서 어떤 단어의 속성이 주어진 attributes 중에 있는지
      *                확인할 수 있음.
+     * @see WordAttribute#matches(int, WordAttribute)
+     * @see WordAttribute#matches(int, String)
      */
     public static int makePattern(WordAttribute... attributes){
         int sum = 0;
@@ -59,9 +61,11 @@ public enum WordAttribute {
      * 단어의 속성이 pattern에 부합하는지 검사함.
      * String으로 받은 단어의 품사를 enum 상수로 변환한 후,
      * {@link WordAttribute#matches(int, WordAttribute)}를 호출하여 그 결과를 반환함.
-     * @param pattern 품사 검사에 사용되는 pattern. {@link WordAttribute#makePattern(WordAttribute...)} 참고
+     * @param pattern 품사 검사에 사용되는 pattern.
      * @param key 단어의 속성.
      * @return 단어의 속성이 pattern에 포함되었다면 true, 아니라면 false.
+     * @see WordAttribute#makePattern(WordAttribute...)
+     * @see WordAttribute#matches(int, WordAttribute)
      */
     public static boolean matches(int pattern, String key){
         return matches(pattern, getClass(key));
@@ -72,6 +76,8 @@ public enum WordAttribute {
      * @param pattern 속성 검사에 사용되는 pattern. {@link WordAttribute#makePattern(WordAttribute...)} 참고
      * @param key 단어의 속성.
      * @return 단어의 속성이 pattern에 포함되었다면 true, 아니라면 false.
+     * @see WordAttribute#makePattern(WordAttribute...)
+     * @see WordAttribute#matches(int, String)
      */
     public static boolean matches(int pattern, WordAttribute key){
         return (pattern & key.value) != 0;

@@ -21,7 +21,8 @@ public class KoreanWord implements IWord, Comparable<KoreanWord>{
     public final String word;
 
     /**
-     * 단어의 세부 정보. {@link KoreanWordSpec} 참고
+     * 단어의 세부 정보.
+     * @see KoreanWordSpec
      */
     public KoreanWordSpec[] spec;
 

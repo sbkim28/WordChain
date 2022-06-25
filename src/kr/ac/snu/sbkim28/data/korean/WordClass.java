@@ -70,6 +70,8 @@ public enum WordClass {
      * 사용가능.
      * @param classes 단어의 품사. matches에서 어떤 단어의 품사가 주어진 classes 중에 있는지
      *                확인할 수 있음.
+     * @see WordClass#matches(int, WordClass)
+     * @see WordClass#matches(int, String)
      */
     public static int makePattern(WordClass... classes){
         int sum = 0;
@@ -83,9 +85,11 @@ public enum WordClass {
      * 단어의 품사가 pattern에 부합하는지 검사함.
      * String으로 받은 단어의 품사를 enum 상수로 변환한 후,
      * {@link WordClass#matches(int, WordClass)}를 호출하여 그 결과를 반환함.
-     * @param pattern 품사 검사에 사용되는 pattern. {@link WordClass#makePattern(WordClass...)} 참고
+     * @param pattern 품사 검사에 사용되는 pattern.
      * @param key 단어의 품사.
      * @return 단어의 품사가 pattern에 포함되었다면 true, 아니라면 false.
+     * @see WordClass#makePattern(WordClass...)
+     * @see WordClass#matches(int, WordClass)
      */
     public static boolean matches(int pattern, String key){
         return matches(pattern, getClass(key));
@@ -97,6 +101,8 @@ public enum WordClass {
      * @param pattern 품사 검사에 사용되는 pattern. {@link WordClass#makePattern(WordClass...)} 참고
      * @param key 단어의 품사.
      * @return 단어의 품사가 pattern에 포함되었다면 true, 아니라면 false.
+     * @see WordClass#makePattern(WordClass...)
+     * @see WordClass#matches(int, String)
      */
     public static boolean matches(int pattern, WordClass key){
         return (pattern & key.value) != 0;
