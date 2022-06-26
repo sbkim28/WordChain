@@ -54,7 +54,7 @@ public class ServerEnvironment implements Environment{
             Player player = players[currentPlayerIndex];
 
             char subCharacter = KoreanUtils.getSubChar(currentCharacter);
-            player.notifyTurn(currentCharacter, subCharacter);
+            player.notifyTurn(new GameState(currentCharacter, subCharacter));
 
             playerWord = null;
 

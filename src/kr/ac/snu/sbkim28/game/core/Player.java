@@ -12,17 +12,9 @@ public interface Player {
     /**
      * 플레이어에게 자신의 턴이 왔음을 알려줌.
      * {@link LocalEnvironment}에서 해당 플레이어의 턴이 올 때 호출됨.
-     * @param c 현재 글자.
+     * @param state 현재 상태.
      */
-    void notifyTurn(char c);
-
-    /**
-     * 플레이어에게 자신의 턴이 왔음을 알려줌.
-     * {@link LocalEnvironment}에서 해당 플레이어의 턴이 올 때 호출됨.
-     * @param c 현재 글자.
-     * @param sub 두음법칙을 적용할 수 있는 경우의 글자.
-     */
-    void notifyTurn(char c, char sub);
+    void notifyTurn(GameState state);
 
     /**
      * 사용자로부터 입력을 받고 이를 반환함.
