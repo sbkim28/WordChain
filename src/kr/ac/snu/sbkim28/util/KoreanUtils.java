@@ -1,6 +1,13 @@
 package kr.ac.snu.sbkim28.util;
 
 public class KoreanUtils {
+
+    /**
+     * 가능한 한국어 char의 개수.
+     */
+    public static final int KOREAN_LENGTH = 11202;
+
+    @Deprecated // use getSubChar instead.
     public static String ruleOfThumb(String str){
         String ret = null;
         if (!str.isEmpty()) {
@@ -50,6 +57,7 @@ public class KoreanUtils {
         return ret;
     }
 
+    @Deprecated // use getSubChar instead.
     public static char ruleOfThumb(char c){
         if (c >= '가' && c <= '힣') {
             char[] inf = splitKorean(c);
@@ -82,8 +90,6 @@ public class KoreanUtils {
         return (char) (0xAC00 + (c[0] - 0x1100) * 28 * 21 + (c[1] - 0x1161) * 28  + c[2] - 0x11a7);
     }
 
-
-
     public static int getSubIndex(int i){
         if(i >= 1344 && i <= 3527) {
             if (i <= 1371 || i >= 1512 && i <= 1539 || i >= 1652 && i <= 1679 || i >= 1736 && i <= 1763) {
@@ -99,8 +105,19 @@ public class KoreanUtils {
         return i;
     }
 
-    public static char getSubChar(char c) {
-        return convert2char(getSubIndex(convert2int(c)));
+    public static char getSubChar(char i){
+        if(i >= 45376 && i <= 47559) {
+            if (i <= 45403 || i >= 45544 && i <= 45571 || i >= 45684 && i <= 45711 || i >= 45768 && i <= 45795) {
+                i += 5292;
+            } else if (i >= 47028 && i <= 47055 || i >= 47140 && i <= 47195 || i >= 47308 && i <= 47335
+                    || i >= 47448 && i <= 47475 || i >= 47532) {
+                i += 3528;
+            } else if (i >= 46972 && i <= 47027 || i >= 47196 && i <= 47223
+                    || i >= 47280 && i <= 47307 || i >= 47336 && i <= 47363 || i >= 47476 && i <= 47503) {
+                i -= 1764;
+            }
+        }
+        return i;
     }
 
     public static int convert2int(char c){
