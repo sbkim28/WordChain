@@ -25,6 +25,11 @@ public class ServerEnvironment implements Environment{
     }
 
     @Override
+    public void initialize() {
+
+    }
+
+    @Override
     public void setWordSet(Set<String> wordSet) {
         this.wordSet = wordSet;
     }

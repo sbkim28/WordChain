@@ -20,9 +20,13 @@ public class LocalEnvironment implements Environment {
     public LocalEnvironment(Player player1, Player player2) {
         players = new Player[2];
         wordSet = new HashSet<>();
-        usedWordSet = new HashSet<>();
         players[0] = player1;
         players[1] = player2;
+    }
+
+    @Override
+    public void initialize() {
+        usedWordSet = new HashSet<>();
     }
 
     @Override

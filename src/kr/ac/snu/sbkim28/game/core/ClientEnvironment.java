@@ -14,7 +14,9 @@ public class ClientEnvironment implements Environment {
     }
 
     @Override
-    public void setWordSet(Set<String> wordSet) {}
+    public void initialize() {
+
+    }
 
     @Override
     public void runGame() {
