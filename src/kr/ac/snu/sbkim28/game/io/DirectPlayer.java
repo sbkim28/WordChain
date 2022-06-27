@@ -7,39 +7,33 @@ import kr.ac.snu.sbkim28.game.core.*;
  * @author sbkim28
  * @version 1.0.1
  */
-public abstract class AbstractDirectPlayer extends AbstractPlayer {
+public class DirectPlayer extends AbstractPlayer {
 
     /**
      * 사용자에게 입력을 받고 처리하는 객체.
-     * {@link #createInputReceiver} method가 호출될 때 생성된다.
      * @see PlayerInputReceiver
-     * @see #createInputReceiver()
      */
     protected PlayerInputReceiver inputReceiver;
 
     /**
      * 사용자에게 게임 진행 상황을 보여주는 객체.
-     * {@link #createDisplayer()} method가 호출될 때 생성된다.
      * @see GameDisplayer
-     * @see #createDisplayer()
      */
     protected GameDisplayer displayer;
 
-    public AbstractDirectPlayer() {
+    public DirectPlayer(PlayerInputReceiver inputReceiver, GameDisplayer displayer) {
         super();
+        this.inputReceiver = inputReceiver;
+        this.displayer = displayer;
     }
 
     /**
-     * {@link #createInputReceiver()}와 {@link #createDisplayer()} methods를
-     * 호출하여 {@link #inputReceiver}와 {@link #displayer} 객체를 생성한다.
-     * 이후 게임 시작을 displayer을 통해서 알린다.
+     * 게임 시작을 displayer을 통해서 알린다.
      * @param state 게임 시작 상태
      */
     @Override
     public void initialize(GameInitState state) {
         super.initialize(state);
-        this.createDisplayer();
-        this.createInputReceiver();
         displayer.start(state);
     }
 
@@ -87,19 +81,5 @@ public abstract class AbstractDirectPlayer extends AbstractPlayer {
         super.notifyTurn(state);
         displayer.turn(state);
     }
-
-    /**
-     * {@link #inputReceiver} 객체를 생성한다.
-     * 필요에 따라서 inputReceiver 객체가
-     * null인 경우에만 새롭게 생성하도록 구현할 수 있다.
-     */
-    protected abstract void createInputReceiver();
-
-    /**
-     * {@link #displayer} 객체를 생성한다.
-     * 필요에 따라서 displayer 객체가
-     * null인 경우에만 새롭게 생성하도록 구현할 수 있다.
-     */
-    protected abstract void createDisplayer();
 
 }
