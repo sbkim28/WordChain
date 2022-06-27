@@ -14,7 +14,7 @@ public interface Player {
      * {@link LocalEnvironment}에서 해당 플레이어의 턴이 올 때 호출됨.
      * @param state 현재 상태.
      */
-    void notifyTurn(GameState state);
+    void notifyTurn(GameTurnState state);
 
     /**
      * 사용자로부터 입력을 받고 이를 반환함.
@@ -31,8 +31,15 @@ public interface Player {
      * 사용자가 입력한 단어가 성공하였는지 여부를 알려줌.
      * {@link LocalEnvironment}에서 {@link Player#getWord()}를 호출한 이후
      * 결과를 이 method를 통해서 전달함.
+     * {@link Player#notifySuccess(WordResultState)} 메써드를 사용하는 것을 권장.
+     * 이후 버전에서 삭제 예정.
      */
-    void notifySuccess(boolean success);
+    @Deprecated
+    default void notifySuccess(boolean success){
+        notifySuccess(new WordResultState(success, 0));
+    }
+
+    void notifySuccess(WordResultState state);
 
     /**
      * 게임이 종료되었는지 호출함.
@@ -40,7 +47,14 @@ public interface Player {
      * 이 메써드가 호출됨.
      * 이 메써드가 호출되면 {@link #getWord()} 대기를 중단하여야 하며,
      * {@link #getWord()}에서는 null을 반환하여야 함.
+     * {@link Player#notifyGameOver(GameOverState)} 메써드를 사용하는 것을 권장.
+     * 이후 버전에서 삭제 예정.
      */
-    void notifyGameOver();
+    @Deprecated
+    default void notifyGameOver(){
+        notifyGameOver(new GameOverState(0));
+    }
+
+    void notifyGameOver(GameOverState state);
 
 }
