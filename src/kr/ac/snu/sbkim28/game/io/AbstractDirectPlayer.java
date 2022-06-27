@@ -1,8 +1,7 @@
 package kr.ac.snu.sbkim28.game.io;
 
-import kr.ac.snu.sbkim28.game.core.AbstractPlayer;
-import kr.ac.snu.sbkim28.game.core.GameInitState;
-import kr.ac.snu.sbkim28.game.core.GameOverState;
+import kr.ac.snu.sbkim28.game.core.*;
+
 /**
  * 직접적으로 사용자에게 입력을 받고 display를 하는 Player 클래스
  * @author sbkim28
@@ -41,6 +40,7 @@ public abstract class AbstractDirectPlayer extends AbstractPlayer {
         super.initialize(state);
         this.createDisplayer();
         this.createInputReceiver();
+        displayer.start(state);
     }
 
     /**
@@ -51,6 +51,7 @@ public abstract class AbstractDirectPlayer extends AbstractPlayer {
      */
     @Override
     public String getWord() {
+        displayer.getInput();
         return inputReceiver.waitUntilPlayerInput();
     }
 
@@ -62,9 +63,30 @@ public abstract class AbstractDirectPlayer extends AbstractPlayer {
     @Override
     public void notifyGameOver(GameOverState state) {
         super.notifyGameOver(state);
+        displayer.over(state);
         inputReceiver.haltWaiting();
     }
 
+    /**
+     * 단어 입력 결과를 받아서 이를 {@link #displayer}을 통해서 출력한다.
+     * @param state 단어 입력 상태
+     */
+    @Override
+    public void notifySuccess(WordResultState state) {
+        super.notifySuccess(state);
+        displayer.result(state);
+    }
+
+    /**
+     * 플레이어의 턴임을 알리는 method.
+     * {@link #displayer}을 통해서 이를 출력한다.
+     * @param state 현재 상태.
+     */
+    @Override
+    public void notifyTurn(GameTurnState state) {
+        super.notifyTurn(state);
+        displayer.turn(state);
+    }
 
     /**
      * {@link #inputReceiver} 객체를 생성한다.
