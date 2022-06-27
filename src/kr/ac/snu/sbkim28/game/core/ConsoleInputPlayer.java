@@ -64,12 +64,12 @@ public class ConsoleInputPlayer extends AbstractPlayer{
     }
 
     @Override
-    public void notifySuccess(boolean success) {
+    public void notifySuccess(WordResultState state) {
 
     }
 
     @Override
-    public void notifyGameOver() {
+    public void notifyGameOver(GameOverState state) {
         waitForUserInput = false;
     }
 }
