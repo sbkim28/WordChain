@@ -10,6 +10,11 @@ package kr.ac.snu.sbkim28.game.core;
 public interface Player {
 
     /**
+     * 처음 게임이 시작되었을 때 호출됨.
+     */
+    void initialize(GameInitState state);
+
+    /**
      * 플레이어에게 자신의 턴이 왔음을 알려줌.
      * {@link LocalEnvironment}에서 해당 플레이어의 턴이 올 때 호출됨.
      * @param state 현재 상태.
