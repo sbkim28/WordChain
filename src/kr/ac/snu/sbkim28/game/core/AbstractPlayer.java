@@ -4,8 +4,8 @@ public abstract class AbstractPlayer implements Player {
 
     private GameTurnState turnState;
     private WordResultState resultState;
-
     private GameInitState initState;
+    private GameOverState gameOverState;
 
     public AbstractPlayer() {
     }
@@ -22,6 +22,10 @@ public abstract class AbstractPlayer implements Player {
         return initState;
     }
 
+    public GameOverState getGameOverState(){
+        return gameOverState;
+    }
+
     @Override
     public void notifySuccess(WordResultState state) {
         this.resultState = state;
@@ -35,5 +39,10 @@ public abstract class AbstractPlayer implements Player {
     @Override
     public void notifyTurn(GameTurnState state) {
         this.turnState = state;
+    }
+
+    @Override
+    public void notifyGameOver(GameOverState state) {
+        this.gameOverState = state;
     }
 }
