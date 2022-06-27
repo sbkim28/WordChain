@@ -1,5 +1,7 @@
 package kr.ac.snu.sbkim28.game.core;
 
+import kr.ac.snu.sbkim28.game.io.ConsoleInputPlayer;
+
 /**
  * 끝말잇기에서 사용자의 입력을 처리함.
  * @author sbkim28
