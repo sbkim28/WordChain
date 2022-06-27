@@ -12,6 +12,7 @@ public class ConsoleGameDisplayer implements GameDisplayer{
     public static final String MSG_START= "게임이 시작되었습니다.";
     public static final String MSG_GUIDE_PLAYER_NUMBER = "당신은 'Player[%d]' 입니다.";
     public static final String MSG_PLAYER_TURN = "당신의 차례입니다. 주어진 문자로 시작하는 단어를 입력하세요.";
+    public static final String MSG_PLAYER_TURN_FIRST = "당신은 첫번째 차례입니다. 아무 단어를 입력해 시작하세요.";
     public static final String MSG_TURN_CHAR = "시작 글자: %c";
     public static final String MSG_TURN_SUB_CHAR = "(%c)";
     public static final String MSG_GET_INPUT = "단어를 입력하세요: ";
@@ -19,13 +20,13 @@ public class ConsoleGameDisplayer implements GameDisplayer{
     public static final String MSG_RESULT_FAIL = "사전에 없는 단어입니다.";
     public static final String MSG_RESULT_DUP = "이미 사용된 단어입니다.";
     public static final String MSG_RESULT_OTHERS = "Player[%d]가 입력한 단어는 '%s'입니다. ";
-
     public static final String MSG_GAMEOVER_SELF_TIMEOVER = "시간이 초과되었습니다. 당신의 패배입니다.";
     public static final String MSG_GAMEOVER_OTHER_TIMEOVER = "상대방이 시간 초과로 패배하였습니다. 당신의 승리입니다.";
     private BufferedWriter bw;
     private String startMsg;
     private String startGuidePlayerNumberMsg;
     private String turnMsg;
+    private String firstTurnMsg;
     private String turnCharMsg;
     private String turnSubCharMsg;
     private String getWordMsg;
@@ -40,6 +41,7 @@ public class ConsoleGameDisplayer implements GameDisplayer{
         this.bw = bw;
         startMsg = MSG_START;
         startGuidePlayerNumberMsg = MSG_GUIDE_PLAYER_NUMBER;
+        firstTurnMsg = MSG_PLAYER_TURN_FIRST;
         turnMsg = MSG_PLAYER_TURN;
         turnCharMsg = MSG_TURN_CHAR;
         turnSubCharMsg = MSG_TURN_SUB_CHAR;
@@ -62,6 +64,10 @@ public class ConsoleGameDisplayer implements GameDisplayer{
 
     public void setTurnMsg(String turnMsg) {
         this.turnMsg = turnMsg;
+    }
+
+    public void setFirstTurnMsg(String firstTurnMsg) {
+        this.firstTurnMsg = firstTurnMsg;
     }
 
     public void setTurnCharMsg(String turnCharMsg) {
@@ -117,12 +123,17 @@ public class ConsoleGameDisplayer implements GameDisplayer{
     @Override
     public void turn(GameTurnState turnState) {
         try{
-            bw.write(turnMsg);
-            bw.newLine();
-            bw.write(String.format(turnCharMsg, turnState.c));
-            if(turnState.c == turnState.sub)
-                bw.write(String.format(turnSubCharMsg, turnState.sub));
-            bw.newLine();
+            if(turnState.c == 0){
+                bw.write(firstTurnMsg);
+                bw.newLine();
+            } else {
+                bw.write(turnMsg);
+                bw.newLine();
+                bw.write(String.format(turnCharMsg, turnState.c));
+                if (turnState.c != turnState.sub)
+                    bw.write(String.format(turnSubCharMsg, turnState.sub));
+                bw.newLine();
+            }
             bw.flush();
 
         }catch (IOException e){
@@ -167,6 +178,7 @@ public class ConsoleGameDisplayer implements GameDisplayer{
     public void over(GameOverState overState) {
         boolean thisPlayer = overState.playerNumber == playerNumber;
         try {
+            bw.newLine();
             switch (overState.cause){
                 case TIMEOVER -> bw.write(thisPlayer ? gameoverSelfTimeOver : gameoverOtherTimeOver);
             }
