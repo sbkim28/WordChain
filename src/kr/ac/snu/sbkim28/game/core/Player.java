@@ -4,7 +4,7 @@ package kr.ac.snu.sbkim28.game.core;
  * 끝말잇기에서 사용자의 입력을 처리함.
  * @author sbkim28
  * @version 1.0
- * @see kr.ac.snu.sbkim28.game.io.DirectPlayer
+ * @see kr.ac.snu.sbkim28.game.dp.DirectPlayer
  * @see LocalEnvironment
  */
 public interface Player {

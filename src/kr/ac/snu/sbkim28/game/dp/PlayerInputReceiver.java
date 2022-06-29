@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.game.io;
+package kr.ac.snu.sbkim28.game.dp;
 
 /**
  * 플레이어로부터 입력을 받음.

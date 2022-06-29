@@ -8,9 +8,9 @@ import kr.ac.snu.sbkim28.data.korean.KoreanWordSelector;
 import kr.ac.snu.sbkim28.game.core.Environment;
 import kr.ac.snu.sbkim28.game.core.LocalEnvironment;
 import kr.ac.snu.sbkim28.game.core.Player;
-import kr.ac.snu.sbkim28.game.io.ConsoleGameDisplayer;
-import kr.ac.snu.sbkim28.game.io.ConsolePlayerInputReceiver;
-import kr.ac.snu.sbkim28.game.io.DirectPlayer;
+import kr.ac.snu.sbkim28.game.dp.ConsoleGameDisplayer;
+import kr.ac.snu.sbkim28.game.dp.ConsolePlayerInputReceiver;
+import kr.ac.snu.sbkim28.game.dp.DirectPlayer;
 
 import java.io.*;
 

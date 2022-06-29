@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.game.io;
+package kr.ac.snu.sbkim28.game.dp;
 
 import java.io.BufferedReader;
 import java.io.IOException;

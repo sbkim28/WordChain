@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.game.io;
+package kr.ac.snu.sbkim28.game.dp;
 
 import kr.ac.snu.sbkim28.game.core.*;
 
