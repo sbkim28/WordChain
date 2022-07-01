@@ -33,7 +33,12 @@ public class GraphAnalyzer {
         absolutePPosition = new boolean[length];
         for (int i = 0; i<length; ++i){
             for (int j = 0; j<length; ++j){
-                //todo
+                if(matrix[i][j] > 0){
+                    if(absoluteNPosition[j]) {
+                        absolutePPosition[i] = true;
+                        break;
+                    }
+                }
             }
         }
     }
