@@ -2,30 +2,38 @@ package kr.ac.snu.sbkim28.game.core;
 
 public abstract class AbstractPlayer implements Player {
 
-    private char currentChar;
-    private char currentSubChar;
+    private GameTurnState turnState;
+    private WordResultState resultState;
+
+    private GameInitState initState;
 
     public AbstractPlayer() {
     }
 
-    public char getCurrentChar() {
-        return currentChar;
+    public GameTurnState getTurnState() {
+        return turnState;
     }
 
-    public char getCurrentSubChar() {
-        return currentSubChar;
+    public WordResultState getResultState() {
+        return resultState;
+    }
+
+    public GameInitState getInitState() {
+        return initState;
     }
 
     @Override
-    public void notifyTurn(char c) {
-        notifyTurn(c, '\0');
+    public void notifySuccess(WordResultState state) {
+        this.resultState = state;
     }
 
     @Override
-    public void notifyTurn(char c, char sub) {
-        currentChar = c;
-        currentSubChar = sub;
+    public void initialize(GameInitState state) {
+        this.initState = state;
     }
 
-
+    @Override
+    public void notifyTurn(GameTurnState state) {
+        this.turnState = state;
+    }
 }
