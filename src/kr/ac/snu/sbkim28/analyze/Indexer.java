@@ -10,12 +10,14 @@ package kr.ac.snu.sbkim28.analyze;
 public interface Indexer {
     /**
      * Character에 대응되는 matrix의 인덱스를 반환함.
+     * @param c character c
      * @return 파라미터 c에 대응되는 인덱스. c에 대응되는 인덱스가 존재하지 않으면 -1을 반환함.
      */
     int getIndex(char c);
 
     /**
      * matrix의 인덱스에 대응되는 Character을 반환함.
+     * @param index int index
      * @throws ArrayIndexOutOfBoundsException
      * 만약 파라미터로 주어진 index가 범위에 벗어날 경우.
      */
@@ -23,12 +25,29 @@ public interface Indexer {
 
     /**
      * Indexer에 추가된 character의 종류의 개수를 반환함.
+     * @return indexer의 length
      */
     int getLength();
 
     /**
      * Character c를 추가함. c에 대응되는 인덱스를 생성함.
      * 만약 이미 c가 존재한다면 별도로 인덱스를 새로 생성하지 않음.
+     * @return c가 존재하여 indexer에 변화가 없으면 false, c가 존재하지 않아서 새로 생성하였다면 true
      */
-    void addChar(char c);
+    boolean addChar(char c);
+
+    /**
+     * Character가 indexer에 존재하는지를 확인함.
+     * @param c character c
+     * @return param c가 indexer에 있다면 true, 없다면 false.
+     */
+    boolean containsChar(char c);
+
+    /**
+     * Character을 indexer에서 제거함. 만약 Character가 indexer에 존재하지 않는다면
+     * 별도의 작업을 수행하지 않음.
+     * @param c character c
+     * @return param c가 존재하지 않아서 indexer에 변화가 없으면 false. c가 존재하여 제거하였다면 true.
+     */
+    boolean removeChar(char c);
 }

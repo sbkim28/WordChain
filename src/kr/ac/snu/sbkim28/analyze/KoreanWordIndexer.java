@@ -45,11 +45,40 @@ public class KoreanWordIndexer implements Indexer{
     }
 
     @Override
-    public void addChar(char c) {
+    public boolean addChar(char c) {
         int value = KoreanUtils.convert2int(c);
         if (indexTable[value] == -1) {
             indexTable[value] = length;
             valueTable[length++] = value;
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean containsChar(char c) {
+        return indexTable[KoreanUtils.convert2int(c)] != -1;
+    }
+
+    @Override
+    public boolean removeChar(char c) {
+        int value = KoreanUtils.convert2int(c);
+
+        int index = indexTable[value];
+
+        if(index == -1)
+            return false;
+
+        indexTable[value] = -1;
+        valueTable[index] = -1;
+
+        for (int i = index + 1; i < length; ++i){
+            --indexTable[valueTable[i]];
+            valueTable[i - 1] = valueTable[i];
+        }
+
+        valueTable[length - 1] = -1;
+        --length;
+        return true;
     }
 }
