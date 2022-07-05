@@ -3,29 +3,33 @@ package kr.ac.snu.sbkim28.analyze;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
 import java.util.Collection;
-import static kr.ac.snu.sbkim28.util.KoreanUtils.getSubChar;
 
 public class GraphAnalyzer {
-    private int[][] matrix;
-
+    private WordMatrix matrix;
     private int[] charType;
     private Indexer indexer;
     private int length;
 
-    public GraphAnalyzer(Collection<String> wordSet) {
-        WordGraphGenerator wgg = new WordGraphGenerator();
-        wgg.generate(wordSet);
-        matrix = wgg.getMatrix();
-        indexer = wgg.getIndexer();
+    private GraphAnalyzer(WordMatrix matrix, Indexer indexer){
+        this.matrix = matrix;
+        this.indexer = indexer;
         length = indexer.getLength();
+    }
+
+    public static GraphAnalyzer createAnalyzer(Collection<String> words){
+        WordGraphGenerator generator = new WordGraphGenerator();
+        generator.generate(words);
+        return new GraphAnalyzer(generator.getMatrix(), generator.getIndexer());
+    }
+
+    public boolean containsChar(char c){
+        return indexer.getIndex(c) != -1;
     }
 
     public int getSubIndex(int index){
         return indexer.getIndex(
                 KoreanUtils.getSubChar(indexer.getChar(index)));
     }
-
-    // WARNING: There is bug related to sub char...
     public void findCharType(){
         charType = new int[length];
 
@@ -38,21 +42,19 @@ public class GraphAnalyzer {
         }
 
         boolean isSomethingChanged;
-        do{
+        do {
             isSomethingChanged = false;
 
             for (int i = 0; i<length; ++i){
                 int maxPriority = Integer.MIN_VALUE;
                 if(charType[i] == 0)
                     continue;
-                int maxType = -1;
+                int maxType = 1;
                 int sub = getSubIndex(i);
                 if(sub == -1)
                     sub = i;
                 for (int j = 0; j<length; ++j){
-                    if(i == j) // to check self loop;
-                        continue;
-                    if(matrix[i][j] != 0 || matrix[sub][j] != 0) {
+                    if(matrix.get(i, j) > 0 || matrix.get(sub, j) > 0) {
                         int priority = getTypePriority(charType[j]);
                         if (priority > maxPriority) {
                             maxType = charType[j];
@@ -60,24 +62,14 @@ public class GraphAnalyzer {
                         }
                     }
                 }
-
-                if(maxPriority > 0){
+                if(maxPriority != 0){
                     int next = maxType + 1;
-                    isSomethingChanged
-                            |= next != charType[i];
-                    charType[i] = next;
-                } else if(maxPriority < 0){
-                    int next = maxType + 1 + matrix[i][i];
-                    if(sub != i)
-                        next += matrix[sub][i];
                     isSomethingChanged
                             |= next != charType[i];
                     charType[i] = next;
                 }
             }
         } while (isSomethingChanged);
-
-        int i = 0;
     }
 
     public static int getTypePriority(int i){
@@ -93,9 +85,13 @@ public class GraphAnalyzer {
 
     public boolean hasOutEdge(int index){
         for (int i = 0; i<length; ++i){
-            if(matrix[index][i] != 0)
+            if(matrix.get(index, i) > 0)
                 return true;
         }
         return false;
+    }
+
+    public int getCharType(char c){
+        return charType[indexer.getIndex(c)];
     }
 }

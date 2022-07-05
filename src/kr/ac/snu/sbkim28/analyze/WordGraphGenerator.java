@@ -11,10 +11,7 @@ import java.util.Collection;
  */
 public class WordGraphGenerator {
 
-    /**
-     * 생성할 인접행렬
-     */
-    private int[][] matrix;
+    private WordMatrix matrix;
     private int len;
 
     /**
@@ -23,7 +20,9 @@ public class WordGraphGenerator {
      */
     private Indexer indexer;
 
-    public WordGraphGenerator() {}
+    public WordGraphGenerator() {
+        indexer = new KoreanWordIndexer();
+    }
 
     public void generate(Collection<String> data){
         for (String word : data){
@@ -32,35 +31,19 @@ public class WordGraphGenerator {
         }
         len = indexer.getLength();
 
-        matrix = new int[len][len];
+        matrix = new WordMatrix(len);
 
         for (String word : data){
-            ++matrix[indexer.getIndex(word.charAt(0))][indexer.getIndex(word.charAt(word.length() - 1))];
+            matrix.add(indexer.getIndex(word.charAt(0)),
+                    indexer.getIndex(word.charAt(word.length() - 1)));
         }
     }
 
-    public int[][] getMatrix() {
-        int[][] ret = new int[len][len];
-        for (int i = 0; i<len;++i){
-            System.arraycopy(matrix[i], 0, ret[i], 0, len);
-        }
-        return ret;
+    public WordMatrix getMatrix() {
+        return matrix;
     }
 
     public Indexer getIndexer() {
         return indexer;
     }
-
-    public int getLen() {
-        return len;
-    }
-
-    public int convertKorean2int(char c){
-        return KoreanUtils.convert2int(c);
-    }
-
-    public char convertint2Korean(int i){
-        return KoreanUtils.convert2char(i);
-    }
-
 }
