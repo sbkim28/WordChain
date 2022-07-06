@@ -3,6 +3,8 @@ package kr.ac.snu.sbkim28.analyze;
 /**
  * 그래프에서 Character를 인덱스로 반환하고,
  * 인덱스를 Character로 반환함.
+ * 인접행렬을 이용한 그래프에서 각 행과 열의 인덱스에 대응되는
+ * Character가 뭔지 가리키기 위해서 사용함.
  * @author sbkim28
  * @version 1.0.1
  * @see WordGraphGenerator
@@ -44,8 +46,8 @@ public interface Indexer {
     boolean containsChar(char c);
 
     /**
-     * Character을 indexer에서 제거함. 만약 Character가 indexer에 존재하지 않는다면
-     * 별도의 작업을 수행하지 않음.
+     * Character을 indexer에서 제거하고, 기존 Character의 index을 제거된 index에 따라서 수정함.
+     * 만약 Character가 indexer에 존재하지 않는다면 별도의 작업을 수행하지 않음.
      * @param c character c
      * @return param c가 존재하지 않아서 indexer에 변화가 없으면 false. c가 존재하여 제거하였다면 true.
      */

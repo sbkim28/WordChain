@@ -4,6 +4,16 @@ import kr.ac.snu.sbkim28.util.KoreanUtils;
 
 import static kr.ac.snu.sbkim28.util.KoreanUtils.KOREAN_LENGTH;
 
+
+/**
+ * <p>한국어 문자를 index로 변환해주는 클래스.
+ * 그래프에서 각 행과 열의 index가 어떠한 한국어 문자에 대응되는지, 그리고
+ * 그 반대는 어떻게 대응되는지를 빠른 속도로 알려줄 수 있다.</p>
+ *
+ * <p>
+ *     특정 한국어 문자를 저장하기 위해서
+ * </p>
+ */
 public class KoreanWordIndexer implements Indexer{
     private int[] indexTable;
     private int[] valueTable;
