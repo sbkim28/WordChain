@@ -1,6 +1,8 @@
 package kr.ac.snu.sbkim28.analyze;
 
-public interface Graph {
+import java.util.Iterator;
+
+public interface Graph<T extends VertexIterator<T>> extends Iterable<T>{
     void addVertex(char c);
     void removeVertex(char c);
     void addEdge(char from, char to);
@@ -9,6 +11,11 @@ public interface Graph {
     boolean containsEdge(char from, char to);
     int edgeCount(char c);
     int edgeCount(char from, char to);
+    int vertexSize();
 
-    // todo iterator method
+    T getVertex(char c);
+    @Override
+    Iterator<T> iterator();
+
+
 }

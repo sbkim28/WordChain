@@ -2,15 +2,14 @@ package kr.ac.snu.sbkim28.analyze;
 
 import java.util.*;
 
-public class ListGraph implements Graph {
+public class ListGraph implements Graph<ListGraph.GraphVertex> {
 
     private Map<Character, GraphVertex> vertexMap;
-
     public ListGraph() {
-        this.vertexMap = new HashMap<>();
+        this.vertexMap = new LinkedHashMap<>();
     }
     public ListGraph(int length){
-        this.vertexMap = new HashMap<>((int) (length / 0.75 + 1));
+        this.vertexMap = new LinkedHashMap<>((int) (length / 0.75 + 1));
     }
 
     @Override
@@ -75,20 +74,37 @@ public class ListGraph implements Graph {
         return cnt;
     }
 
-    public GraphVertex getVertex(char from){
-        return vertexMap.get(from);
+    @Override
+    public int vertexSize() {
+        return vertexMap.size();
     }
 
-    public static class GraphVertex extends ArrayList<GraphVertex>{
+    @Override
+    public GraphVertex getVertex(char c){
+        return vertexMap.get(c);
+    }
+
+    @Override
+    public Iterator<GraphVertex> iterator() {
+        return vertexMap.values().iterator();
+    }
+
+    public static class GraphVertex extends ArrayList<GraphVertex>
+    implements VertexIterator<GraphVertex>{
         private char c;
 
-        public GraphVertex(char c) {
+        private GraphVertex(char c) {
             super();
             this.c = c;
         }
-
-        public char getChar() {
+        @Override
+        public char getVertexChar() {
             return c;
+        }
+
+        @Override
+        public Iterator<GraphVertex> iterator() {
+            return super.iterator();
         }
 
         @Override

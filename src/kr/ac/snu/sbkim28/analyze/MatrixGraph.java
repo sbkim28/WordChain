@@ -1,6 +1,9 @@
 package kr.ac.snu.sbkim28.analyze;
 
-public class MatrixGraph implements Graph{
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class MatrixGraph implements Graph<MatrixGraph.MatrixVertexIterator> {
     private AdjacentMatrix matrix;
     private Indexer indexer;
 
@@ -86,5 +89,83 @@ public class MatrixGraph implements Graph{
         return matrix.get(indexer.getIndex(from), indexer.getIndex(to));
     }
 
+    @Override
+    public int vertexSize() {
+        return vertexSize;
+    }
+
+    @Override
+    public MatrixVertexIterator getVertex(char c) {
+        return new MatrixVertexIterator(c);
+    }
+
+    @Override
+    public Iterator<MatrixVertexIterator> iterator() {
+        return new Iterator<>() {
+            private int cursor = 0;
+            @Override
+            public boolean hasNext() {
+                return cursor < vertexSize;
+            }
+
+            @Override
+            public MatrixVertexIterator next() {
+                if(!hasNext())
+                    throw new NoSuchElementException();
+                return new MatrixVertexIterator(cursor);
+            }
+        };
+    }
+
+    public class MatrixVertexIterator implements VertexIterator<MatrixVertexIterator> {
+        private char c;
+        private int index;
+        private MatrixVertexIterator(char c) {
+            this.c = c;
+            index = indexer.getIndex(c);
+        }
+
+        private MatrixVertexIterator(int index){
+            this.index = index;
+            c = indexer.getChar(index);
+        }
+
+        @Override
+        public char getVertexChar() {
+            return c;
+        }
+        @Override
+        public Iterator<MatrixVertexIterator> iterator() {
+            return new Iterator<>() {
+                private int cursor = 0;
+                private MatrixVertexIterator holder;
+                private boolean setCursor(){
+                    while (cursor < vertexSize && matrix.get(index, cursor) != 0){
+                        ++cursor;
+                    }
+                    return cursor < vertexSize;
+                }
+                @Override
+                public boolean hasNext() {
+                    boolean ret = setCursor();
+                    if(ret)
+                        holder = new MatrixVertexIterator(cursor);
+                    return ret;
+                }
+
+                @Override
+                public MatrixVertexIterator next() {
+                    if(holder == null) {
+                        if(!setCursor()){
+                            throw new NoSuchElementException();
+                        }
+                        holder = new MatrixVertexIterator(cursor);
+                        ++cursor;
+                    }
+                    return holder;
+                }
+            };
+        }
+    }
 
 }
