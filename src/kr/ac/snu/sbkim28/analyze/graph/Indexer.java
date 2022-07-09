@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.analyze;
+package kr.ac.snu.sbkim28.analyze.graph;
 
 /**
  * 그래프에서 Character를 인덱스로 반환하고,
@@ -7,7 +7,7 @@ package kr.ac.snu.sbkim28.analyze;
  * Character가 뭔지 가리키기 위해서 사용함.
  * @author sbkim28
  * @version 1.0.1
- * @see WordGraphGenerator
+ * @see MatrixWordGraph
  */
 public interface Indexer {
     /**

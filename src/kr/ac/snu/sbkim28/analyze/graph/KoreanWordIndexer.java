@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.analyze;
+package kr.ac.snu.sbkim28.analyze.graph;
 
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
@@ -11,7 +11,7 @@ import static kr.ac.snu.sbkim28.util.KoreanUtils.KOREAN_LENGTH;
  * 그 반대는 어떻게 대응되는지를 빠른 속도로 알려줄 수 있다.</p>
  *
  * <p>
- *     특정 한국어 문자를 저장하기 위해서
+ *     특정 한국어 문자를 저장하기 위해서 배열을 사용한다.
  * </p>
  */
 public class KoreanWordIndexer implements Indexer{
@@ -27,6 +27,7 @@ public class KoreanWordIndexer implements Indexer{
     public KoreanWordIndexer(int capacity){
         if(capacity <= 0 || capacity > KOREAN_LENGTH)
             throw new IllegalArgumentException("Invalid capacity:" + capacity);
+        length = 0;
         indexTable = new int[KOREAN_LENGTH];
         valueTable = new int[capacity];
         int i;
@@ -57,12 +58,12 @@ public class KoreanWordIndexer implements Indexer{
     @Override
     public boolean addChar(char c) {
         int value = KoreanUtils.convert2int(c);
-        if (indexTable[value] == -1) {
+        boolean added = indexTable[value] == -1;
+        if (added) {
             indexTable[value] = length;
             valueTable[length++] = value;
-            return true;
         }
-        return false;
+        return added;
     }
 
     @Override

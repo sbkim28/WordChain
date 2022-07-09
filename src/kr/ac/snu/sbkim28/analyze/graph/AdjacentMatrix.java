@@ -1,4 +1,4 @@
-package kr.ac.snu.sbkim28.analyze;
+package kr.ac.snu.sbkim28.analyze.graph;
 
 import java.util.Arrays;
 
@@ -45,6 +45,23 @@ public class AdjacentMatrix {
             --matrix[i * length + j];
         }
         return ret;
+    }
+
+    public void removeLine(int index){
+        for (int i = index + 1; i < length; ++i) {
+            for (int j = 0; j < index; ++j) {
+                set(i - 1, j, get(i, j));
+                set(j, i - 1, get(j, i));
+            }
+            for (int j = index + 1; j < length; ++j) {
+                set(i - 1, j - 1, get(i, j));
+            }
+        }
+        int last = length - 1;
+        for (int i = 0; i < last; ++i) {
+            set(i, last, 0);
+            set(last, i, 0);
+        }
     }
 
     public AdjacentMatrix copy(){
