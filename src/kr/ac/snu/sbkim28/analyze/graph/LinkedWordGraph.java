@@ -18,7 +18,7 @@ public abstract class LinkedWordGraph<V extends Vertex<V>> implements WordGraph,
 
     protected boolean putVertex(char c, V v){
         boolean put = containsVertex(c);
-        if(put)
+        if(!put)
             vertexMap.put(c, v);
         return put;
     }
@@ -108,9 +108,10 @@ public abstract class LinkedWordGraph<V extends Vertex<V>> implements WordGraph,
         builder.append(getClass().getSimpleName()).append('\n');
         for (V vertex: this) {
             builder.append(vertex.getVertexChar());
+            builder.append(": ");
             boolean isFirst = true;
             for(V to : vertex){
-                if(isFirst){
+                if(!isFirst){
                     builder.append(", ");
                 }
                 isFirst = false;

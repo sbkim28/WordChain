@@ -104,8 +104,8 @@ public class MatrixWordGraph implements IndexedGraph {
     public boolean containsEdge(char c) {
         int index = indexer.getIndex(c);
         boolean ret = false;
-        if(index > 0) {
-            for (int i = 0; i < vertexSize; i++) {
+        if(index != -1) {
+            for (int i = 0; i < vertexSize; ++i) {
                 if (matrix.get(index, i) > 0){
                     ret = true;
                     break;
@@ -126,7 +126,14 @@ public class MatrixWordGraph implements IndexedGraph {
 
     @Override
     public boolean containsEdge(int index) {
-        return edgeCount(index) > 0;
+        boolean ret = false;
+        for (int i = 0; i < vertexSize; ++i) {
+            if (matrix.get(index, i) > 0){
+                ret = true;
+                break;
+            }
+        }
+        return ret;
     }
 
     @Override
