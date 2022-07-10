@@ -1,10 +1,9 @@
 package kr.ac.snu.sbkim28.analyze.graph;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class MatrixWordGraph implements WordGraph {
-    private AdjacentMatrix matrix;
+public class MatrixWordGraph implements IndexedGraph {
+    private Matrix matrix;
     private Indexer indexer;
 
     private int capacity;
@@ -22,7 +21,7 @@ public class MatrixWordGraph implements WordGraph {
         matrix = new AdjacentMatrix(capacity);
     }
 
-    private MatrixWordGraph(AdjacentMatrix matrix, Indexer indexer) {
+    private MatrixWordGraph(Matrix matrix, Indexer indexer) {
         super();
         this.matrix = matrix;
         this.indexer = indexer;
@@ -47,6 +46,16 @@ public class MatrixWordGraph implements WordGraph {
             indexer.addChar(word.charAt(word.length() - 1));
         }
         return indexer.getLength();
+    }
+
+    @Override
+    public Indexer getIndexer() {
+        return new IndexerDelegator(indexer);
+    }
+
+    @Override
+    public Matrix getMatrix() {
+        return new MatrixDelegator(matrix);
     }
 
     @Override
@@ -137,6 +146,27 @@ public class MatrixWordGraph implements WordGraph {
     }
 
     @Override
+    public int edgeCount(int index) {
+        if(index < 0 || index >= vertexSize)
+            throw new IndexOutOfBoundsException(index);
+        int sum = 0;
+        for (int i = 0; i < vertexSize; i++) {
+            sum += matrix.get(index, i);
+        }
+        return sum;
+    }
+
+    @Override
+    public int edgeCount(int from, int to) {
+        if(from < 0 || from >= vertexSize)
+            throw new IndexOutOfBoundsException(from);
+        if(to < 0 || to >= vertexSize)
+            throw new IndexOutOfBoundsException(to);
+
+        return matrix.get(from, to);
+    }
+
+    @Override
     public int vertexSize() {
         return vertexSize;
     }
@@ -168,5 +198,85 @@ public class MatrixWordGraph implements WordGraph {
             builder.append('\n');
         }
         return builder.toString();
+    }
+
+    private static final class MatrixDelegator implements Matrix {
+        private Matrix matrix;
+
+        private MatrixDelegator(Matrix matrix) {
+            this.matrix = matrix;
+        }
+
+        @Override
+        public int get(int i, int j) {
+            return matrix.get(i, j);
+        }
+
+        @Override
+        public int length() {
+            return matrix.length();
+        }
+
+        @Override
+        public boolean set(int i, int j, int v) {
+            return false;
+        }
+
+        @Override
+        public boolean add(int i, int j) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(int i, int j) {
+            return false;
+        }
+
+        @Override
+        public boolean removeLine(int index) {
+            return false;
+        }
+
+        @Override
+        public Matrix resize(int size) {
+            return matrix.resize(size);
+        }
+    }
+    private static final class IndexerDelegator implements Indexer {
+        private Indexer indexer;
+
+        private IndexerDelegator(Indexer indexer) {
+            this.indexer = indexer;
+        }
+
+        @Override
+        public int getIndex(char c) {
+            return indexer.getIndex(c);
+        }
+
+        @Override
+        public char getChar(int index) {
+            return indexer.getChar(index);
+        }
+
+        @Override
+        public int getLength() {
+            return indexer.getLength();
+        }
+
+        @Override
+        public boolean addChar(char c) {
+            return false;
+        }
+
+        @Override
+        public boolean containsChar(char c) {
+            return indexer.containsChar(c);
+        }
+
+        @Override
+        public boolean removeChar(char c) {
+            return false;
+        }
     }
 }

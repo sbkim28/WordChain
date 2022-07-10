@@ -1,5 +1,9 @@
 package kr.ac.snu.sbkim28.analyze.graph;
 
+/**
+ * Edge.
+ * Graph에서 Edge를 나타내기 위해서 사용.
+ */
 public class Edge {
     private EdgeSpec spec;
     private char initialChar;
