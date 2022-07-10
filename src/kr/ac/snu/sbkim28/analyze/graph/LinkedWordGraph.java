@@ -112,8 +112,8 @@ public abstract class LinkedWordGraph<V extends Vertex<V>> implements WordGraph,
             for(V to : vertex){
                 if(isFirst){
                     builder.append(", ");
-                    isFirst = false;
                 }
+                isFirst = false;
                 builder.append(to.getVertexChar());
             }
             if(isFirst)

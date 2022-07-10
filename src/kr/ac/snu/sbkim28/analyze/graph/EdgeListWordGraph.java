@@ -10,6 +10,16 @@ public class EdgeListWordGraph extends LinkedWordGraph<EdgedVertex>
         super(length);
     }
 
+    public static EdgeListWordGraph createNew(Iterable<String> wordSet){
+        EdgeListWordGraph graph = new EdgeListWordGraph();
+        for (String s : wordSet){
+            graph.addVertex(s.charAt(0));
+            graph.addVertex(s.charAt(s.length() - 1));
+            graph.addEdge(s);
+        }
+        return graph;
+    }
+
     @Override
     public boolean addVertex(char c) {
         return putVertex(c, new EdgedVertex(c));

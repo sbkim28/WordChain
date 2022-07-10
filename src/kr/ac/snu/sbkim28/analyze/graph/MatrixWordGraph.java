@@ -125,6 +125,16 @@ public class MatrixWordGraph implements IndexedGraph {
     }
 
     @Override
+    public boolean containsEdge(int index) {
+        return edgeCount(index) > 0;
+    }
+
+    @Override
+    public boolean containsEdge(int from, int to) {
+        return edgeCount(from, to) > 0;
+    }
+
+    @Override
     public int edgeCount(char c) {
         int sum = 0;
         int index = indexer.getIndex(c);
@@ -183,10 +193,10 @@ public class MatrixWordGraph implements IndexedGraph {
             for (int j = 0; j < vertexSize; j++) {
                 int cnt = matrix.get(i, j);
                 if(cnt != 0){
-                    if(isFirstAppend) {
+                    if(!isFirstAppend) {
                         builder.append(", ");
-                        isFirstAppend = false;
                     }
+                    isFirstAppend = false;
                     builder.append(indexer.getChar(j));
                     builder.append('[');
                     builder.append(cnt);

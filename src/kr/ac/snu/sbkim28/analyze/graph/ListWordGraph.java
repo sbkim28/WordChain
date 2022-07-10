@@ -9,6 +9,18 @@ public class ListWordGraph extends LinkedWordGraph<ListVertex> {
         super(length);
     }
 
+    public static ListWordGraph createNew(Iterable<String> wordSet){
+        ListWordGraph graph = new ListWordGraph();
+        for (String s : wordSet){
+            char initC = s.charAt(0);
+            char finalC = s.charAt(s.length() - 1);
+            graph.addVertex(initC);
+            graph.addVertex(finalC);
+            graph.addEdge(initC, finalC);
+        }
+        return graph;
+    }
+
     @Override
     public boolean addVertex(char c){
         return putVertex(c, new ListVertex(c));
