@@ -2,6 +2,7 @@ package kr.ac.snu.sbkim28.analyze;
 
 import kr.ac.snu.sbkim28.analyze.graph.IndexedGraph;
 import kr.ac.snu.sbkim28.analyze.graph.Indexer;
+import kr.ac.snu.sbkim28.analyze.graph.WordGraph;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
 import java.util.Collection;
@@ -107,5 +108,22 @@ public class IndexedCharTypeFinder extends CharTypeFinder {
             }
         }
         return len;
+    }
+
+    @Override
+    public void extractUntypedGraph(WordGraph newGraph) {
+        for (int i = 0; i < length; ++i) {
+            if(charType[i] == -1){
+                char ci = indexer.getChar(i);
+                newGraph.addVertex(ci);
+                for (int j = 0; j < length; ++j) {
+                    if(charType[j] == -1){
+                        char cf = indexer.getChar(j);
+                        newGraph.addVertex(cf);
+                        newGraph.addEdge(ci, cf);
+                    }
+                }
+            }
+        }
     }
 }

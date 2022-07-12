@@ -2,6 +2,7 @@ package kr.ac.snu.sbkim28.analyze;
 
 import kr.ac.snu.sbkim28.analyze.graph.LinkedWordGraph;
 import kr.ac.snu.sbkim28.analyze.graph.Vertex;
+import kr.ac.snu.sbkim28.analyze.graph.WordGraph;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
 import java.util.Collection;
@@ -75,7 +76,6 @@ public class LinkedCharTypeFinder extends CharTypeFinder {
         }
         return ret;
     }
-
     private int maxPriority;
     private int maxType;
     private boolean setCharTypeByPriority(Vertex<?> vertex){
@@ -120,4 +120,22 @@ public class LinkedCharTypeFinder extends CharTypeFinder {
         }
         return ret;
     }
+
+    @Override
+    public void extractUntypedGraph(WordGraph newGraph) {
+        for (Vertex<?> v: graph){
+            char c = v.getVertexChar();
+            if(getCharType(v.getVertexChar()) == -1){
+                newGraph.addVertex(c);
+                for (Vertex<?> toVertex: v) {
+                    char tv = toVertex.getVertexChar();
+                    if(getCharType(tv) == -1){
+                        newGraph.addVertex(tv);
+                        newGraph.addEdge(c, tv);
+                    }
+                }
+            }
+        }
+    }
+
 }

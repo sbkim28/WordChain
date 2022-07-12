@@ -20,6 +20,8 @@ public abstract class CharTypeFinder {
     public abstract int getMaxChoices(char c, Collection<Character> choices);
     public abstract int findCharWithType(int type, Collection<Character> chars);
 
+    public abstract void extractUntypedGraph(WordGraph newGraph);
+
     public boolean hasOutEdge(char c){
         char sub;
         boolean hasOutEdge = graph.containsEdge(c);
