@@ -4,8 +4,7 @@ import kr.ac.snu.sbkim28.analyze.graph.IndexedGraph;
 import kr.ac.snu.sbkim28.analyze.graph.Indexer;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class IndexedCharTypeFinder extends CharTypeFinder {
 
@@ -45,7 +44,7 @@ public class IndexedCharTypeFinder extends CharTypeFinder {
 
     private boolean setCharTypeByPriority(){
         boolean ret = false;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length; ++i) {
             if(charType[i] != 0)
                 ret |= setCharTypeByPriority(i);
         }
@@ -53,14 +52,12 @@ public class IndexedCharTypeFinder extends CharTypeFinder {
     }
 
     private boolean setCharTypeByPriority(int i){
-        int sub = indexer.getIndex(KoreanUtils.getSubChar(indexer.getChar(i)));
-        if(sub == -1)
-            sub = i;
+        int sub = getSubIndex(i);
 
         int max = Integer.MIN_VALUE;
         int maxType = 1;
 
-        for (int j = 0; j < length; j++) {
+        for (int j = 0; j < length; ++j) {
             if(graph.containsEdge(i, j) || graph.containsEdge(sub, j)){
                 int priority = CharTypeFinder.getTypePriority(charType[j]);
                 if(priority > max){
@@ -80,30 +77,35 @@ public class IndexedCharTypeFinder extends CharTypeFinder {
     }
 
     @Override
-    public List<Character> getMaxChoices(char c){
-        int prev = getCharType(c);
-        if(prev > 0)
-            --prev;
-
-        List<Character> ret = new ArrayList<>(prev > 0 ? 1 << 4 : 1 << 5);
+    public int getMaxChoices(char c, Collection<Character> choices){
+        int prev = getPrevType(c);
+        int len = 0;
         int index = indexer.getIndex(c);
-        int sub = indexer.getIndex(KoreanUtils.getSubChar(c));
-        if(sub == -1)
-            sub = index;
-        for (int i = 0; i < length; i++) {
+        int sub = getSubIndex(index);
+        for (int i = 0; i < length; ++i) {
             if(graph.containsEdge(index, i) || graph.containsEdge(sub, i)){
-                if(charType[i] == prev)
-                    ret.add(indexer.getChar(i));
+                if(charType[i] == prev && choices.add(indexer.getChar(i))){
+                    ++len;
+                }
             }
         }
-        return ret;
+        return len;
+    }
+    private int getSubIndex(int index){
+        int sub = indexer.getIndex(KoreanUtils.getSubChar(indexer.getChar(index)));
+        if(sub == -1)
+            sub = index;
+        return sub;
     }
 
     @Override
-    public List<Character> findCharWithType(int type) {
-        List<Character> ret = new ArrayList<>(1 << 8);
-
-        return ret;
+    public int findCharWithType(int type, Collection<Character> chars) {
+        int len = 0;
+        for (int i = 0; i < length; ++i) {
+            if(charType[i] == type && chars.add(indexer.getChar(i))){
+                ++len;
+            }
+        }
+        return len;
     }
-
 }

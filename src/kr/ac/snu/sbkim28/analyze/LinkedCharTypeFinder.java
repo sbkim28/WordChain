@@ -4,9 +4,8 @@ import kr.ac.snu.sbkim28.analyze.graph.LinkedWordGraph;
 import kr.ac.snu.sbkim28.analyze.graph.Vertex;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LinkedCharTypeFinder extends CharTypeFinder {
@@ -52,26 +51,28 @@ public class LinkedCharTypeFinder extends CharTypeFinder {
     }
 
     @Override
-    public List<Character> getMaxChoices(char c){
+    public int getMaxChoices(char c, Collection<Character> choices){
         Vertex<?> v = graph.getVertex(c);
         char sub = KoreanUtils.getSubChar(c);
+        int prev = getPrevType(c);
         Vertex<?> subV;
-        int prev = getCharType(c);
-        if(prev > 0)
-            --prev;
 
-        List<Character> ret = new ArrayList<>(prev > 0 ? 1 << 4 : 1 << 5);
-        addCharToList(ret, v, prev);
+        int ret = addCharToList(choices, v, prev);
         if(sub != c && (subV = graph.getVertex(sub)) != null){
-            addCharToList(ret, subV, prev);
+            ret += addCharToList(choices, subV, prev);
         }
+
         return ret;
     }
 
     @Override
-    public List<Character> findCharWithType(int type) {
-        List<Character> ret = new ArrayList<>(1 << 8);
-
+    public int findCharWithType(int type, Collection<Character> chars) {
+        int ret = 0;
+        for (Vertex<?> v : graph){
+            char c = v.getVertexChar();
+            if(charType.get(c) == type && chars.add(c))
+                ++ret;
+        }
         return ret;
     }
 
@@ -109,12 +110,14 @@ public class LinkedCharTypeFinder extends CharTypeFinder {
         }
     }
 
-    private void addCharToList(List<Character> ret, Vertex<?> v, int target){
+    private int addCharToList(Collection<Character> collection, Vertex<?> v, int target){
+        int ret = 0;
         for (Vertex<?> to : v){
             char toC = to.getVertexChar();
-            if(getCharType(toC) == target){
-                ret.add(toC);
+            if(getCharType(toC) == target && collection.add(toC)){
+                ++ret;
             }
         }
+        return ret;
     }
 }

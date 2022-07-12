@@ -167,7 +167,7 @@ public class MatrixWordGraph implements IndexedGraph {
         if(index < 0 || index >= vertexSize)
             throw new IndexOutOfBoundsException(index);
         int sum = 0;
-        for (int i = 0; i < vertexSize; i++) {
+        for (int i = 0; i < vertexSize; ++i) {
             sum += matrix.get(index, i);
         }
         return sum;
@@ -197,7 +197,7 @@ public class MatrixWordGraph implements IndexedGraph {
             builder.append(indexer.getChar(i));
             builder.append(": ");
             boolean isFirstAppend = true;
-            for (int j = 0; j < vertexSize; j++) {
+            for (int j = 0; j < vertexSize; ++j) {
                 int cnt = matrix.get(i, j);
                 if(cnt != 0){
                     if(!isFirstAppend) {

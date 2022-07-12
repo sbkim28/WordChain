@@ -3,7 +3,7 @@ package kr.ac.snu.sbkim28.analyze;
 import kr.ac.snu.sbkim28.analyze.graph.WordGraph;
 import kr.ac.snu.sbkim28.util.KoreanUtils;
 
-import java.util.List;
+import java.util.Collection;
 
 public abstract class CharTypeFinder {
 
@@ -17,8 +17,8 @@ public abstract class CharTypeFinder {
 
     public abstract void initializeCharType();
 
-    public abstract List<Character> getMaxChoices(char c);
-    public abstract List<Character> findCharWithType(int type);
+    public abstract int getMaxChoices(char c, Collection<Character> choices);
+    public abstract int findCharWithType(int type, Collection<Character> chars);
 
     public boolean hasOutEdge(char c){
         char sub;
@@ -26,7 +26,7 @@ public abstract class CharTypeFinder {
         return hasOutEdge || c != (sub = KoreanUtils.getSubChar(c)) && graph.containsEdge(sub);
     }
 
-    static int getTypePriority(int i){
+    public static int getTypePriority(int i){
         int ret;
         if(i < 0)
             ret = 0; // neutral word for 0
@@ -36,5 +36,12 @@ public abstract class CharTypeFinder {
             ret =  i | Integer.MIN_VALUE; // p State
         }
         return ret;
+    }
+
+    public int getPrevType(char c){
+        int prev = getCharType(c);
+        if(prev > 0)
+            --prev;
+        return prev;
     }
 }
